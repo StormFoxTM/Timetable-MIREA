@@ -1,0 +1,91 @@
+version: "3.0"
+
+services:
+
+  postgres:
+    build: 
+      context: ./
+      dockerfile:   postgres/Dockerfile.postgres
+    restart: unless-stopped
+    env_file:
+      - admin.env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    
+  web:
+    hostname: timetable.mirea
+    build:
+      context: ./
+      dockerfile: web-site/Dockerfile.web
+    restart: unless-stopped
+    command: bash -rc ""
+    env_file:
+      - client.env
+    healthcheck:
+      test: curl -sS http://0.0.0.0:8000 || echo 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    hostname: api.mirea
+    build:
+      context: ./
+      dockerfile: api/Dockerfile.api
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    env_file:
+      - api.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  nginx:
+    build:
+      context: ./
+      dockerfile: nginx/Dockerfile.nginx
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    depends_on:
+      web:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+  parser:
+    hostname: parser.mirea
+    build:
+      context: ./
+      dockerfile: parser/Dockerfile.parser
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    depends_on:
+      nginx:
+        condition: service_healthy
+
+  telegram:
+    hostname: telegram.mirea
+    build:
+      context: ./
+      dockerfile: telegram-bot/Dockerfile.telegram
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    env_file:
+      - client.env
+    depends_on:
+      api:
+        condition: service_healthy
