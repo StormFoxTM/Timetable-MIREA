@@ -1,6 +1,12 @@
 CREATE DATABASE TimeTableDB;
-ALTER ROLE denis SET client_encoding TO 'utf8';
-GRANT ALL PRIVILEGES ON DATABASE TimeTableDB TO denis;
+ALTER ROLE admin SET client_encoding TO 'utf8';
+GRANT ALL PRIVILEGES ON DATABASE TimeTableDB TO admin;
+
+ALTER ROLE api SET client_encoding TO 'utf8';
+GRANT ALL PRIVILEGES ON DATABASE TimeTableDB TO api;
+
+ALTER ROLE client SET client_encoding TO 'utf8';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO client;
 
 CREATE SEQUENCE lecturer_id_lecturer_seq START WITH 1;
 
