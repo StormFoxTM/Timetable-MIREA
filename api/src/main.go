@@ -1,20 +1,16 @@
 package main
 
 import (
+	"log"
 	"net/http"
-	"sync"
 
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	worker sync.WaitGroup
-)
-
 func main() {
 	router := gin.Default()
-	router.GET("/hi", func(context *gin.Context) {
-		context.String(http.StatusOK, "Hello world!")
+	router.GET("/timetable", func(context *gin.Context) {
+		get_function(context)
 	})
 	err := router.Run(":9888")
 	if err != nil {
@@ -22,7 +18,50 @@ func main() {
 	}
 }
 
-// 	queue_download.Add(1)
-// 	go download(link, data, &queue_download)
-//  defer queue_download.Done()
-// 	queue_download.Wait()
+func get_function(context *gin.Context) {
+	data := context.Request.URL.Query()
+	group := len(data["group"])
+	lecturer := len(data["lecturer"])
+	auditorium := len(data["auditorium"])
+
+	switch 1 {
+	case group:
+		get_group(context)
+		context.String(http.StatusOK, "group")
+
+	case lecturer:
+		get_lecturer(context)
+		context.String(http.StatusOK, "lecturer")
+
+	case auditorium:
+		get_auditorium(context)
+		context.String(http.StatusOK, "auditorium")
+
+	default:
+		context.String(http.StatusBadRequest, "Ошибка в запросе!")
+	}
+
+}
+
+func get_group(context *gin.Context) {
+	data := context.Request.URL.Query()
+	group, week, day := "", "", ""
+	if len(data["group"]) > 0 {
+		group = data["group"][0]
+	}
+	if len(data["week"]) > 0 {
+		week = data["week"][0]
+	}
+	if len(data["day"]) > 0 {
+		day = data["day"][0]
+	}
+	log.Println(group, week, day)
+}
+
+func get_lecturer(context *gin.Context) {
+
+}
+
+func get_auditorium(context *gin.Context) {
+
+}
