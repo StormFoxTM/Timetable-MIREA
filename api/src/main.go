@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -12,10 +13,32 @@ func main() {
 	router.GET("/timetable", func(context *gin.Context) {
 		get_function(context)
 	})
+	router.POST("/timetable", func(context *gin.Context) {
+		post_function(context)
+	})
 	err := router.Run(":9888")
 	if err != nil {
 		panic("[Error] failed to start Gin server due to: " + err.Error())
 	}
+}
+
+func post_function(context *gin.Context) {
+	jsonData, err := ioutil.ReadAll(context.Request.Body)
+	if err != nil {
+		// Handle error
+	}
+	data := string(jsonData)
+	log.Println(data)
+
+	// group := len(data["group"])
+	// lecturer := len(data["lecturer"])
+	// auditorium := len(data["auditorium"])
+	// subject := len(data["subject"])
+	// number := len(data["number"])
+	// type_of_subject := len(data["type_of_subject"])
+	// log.Println(group, subject, lecturer, auditorium, number, type_of_subject)
+
+	context.String(http.StatusOK, "Принял")
 }
 
 func get_function(context *gin.Context) {
