@@ -27,9 +27,7 @@ type Links struct {
 var (
 	siteURL = "https://www.mirea.ru/schedule/"
 	links   map[string]Links
-	// days         = [7]string{"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Субботы", "Воскресенье"}
-	// type_of_week = [2]string{"I", "II"}
-	dsn = "api:api@tcp(timetable.postgres:5432)/TimeTableDB?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn     = "api:api@tcp(timetable.postgres:5432)/TimeTableDB?charset=utf8mb4&parseTime=True&loc=Local"
 )
 
 func main() {

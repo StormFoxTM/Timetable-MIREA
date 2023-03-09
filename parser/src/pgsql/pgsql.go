@@ -62,9 +62,6 @@ func MainFunc(group string, day int, type_of_week int, number string,
 		fmt.Errorf("Error to connect db", err)
 	} else {
 		int_course, _ := strconv.Atoi(course)
-		// addLecturer(db, lecturer)
-		// addInstitute(db, institute)
-		// addGroup(db, group, institute, int_course+1)
 		addTimetable(db, group, day, type_of_week, number, subject, lecturer, auditorium, type_of_subject, institute, int_course+1)
 	}
 }
