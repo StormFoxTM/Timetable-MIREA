@@ -1,2 +1,2 @@
 FROM postgres:13.3
-COPY ./images/sql/create_tables.sql /docker-entrypoint-initdb.d/create_tables.sql
+COPY ./postgresql/create_tables.sql /docker-entrypoint-initdb.d/create_tables.sql
