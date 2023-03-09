@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io"
+	"knocker/pgsql"
 	"knocker/xls"
 	"log"
 	"net/http"
@@ -24,10 +25,11 @@ type Links struct {
 }
 
 var (
-	siteURL      = "https://www.mirea.ru/schedule/"
-	links        map[string]Links
-	days         = [7]string{"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Субботы", "Воскресенье"}
-	type_of_week = [2]string{"I", "II"}
+	siteURL = "https://www.mirea.ru/schedule/"
+	links   map[string]Links
+	// days         = [7]string{"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Субботы", "Воскресенье"}
+	// type_of_week = [2]string{"I", "II"}
+	dsn = "api:api@tcp(timetable.postgres:5432)/TimeTableDB?charset=utf8mb4&parseTime=True&loc=Local"
 )
 
 func main() {
@@ -39,6 +41,65 @@ func main() {
 	log.Println("End parsing")
 }
 
+func check_directory() {
+	os.RemoveAll("temp")
+	os.Mkdir("temp", 0777)
+	if _, err := os.Stat("last"); os.IsNotExist(err) {
+		os.Mkdir("last", 0777)
+	}
+}
+
+func loader() error {
+	log.Println("Start loader")
+	var queue_download sync.WaitGroup
+	for link, data := range links {
+		queue_download.Add(1)
+		// go download(link, data, &queue_download)
+		download(link, data, &queue_download)
+	}
+	queue_download.Wait()
+	return nil
+}
+
+func download(url string, data Links, queue_download *sync.WaitGroup) error {
+	defer queue_download.Done()
+	resp, err := connect(url, 0)
+	defer resp.Body.Close()
+
+	if err != nil {
+		return err
+	}
+	file := strings.Join(strings.Fields(data.institute), "-") + "_" +
+		strings.Join(strings.Fields(data.course), "-") + "_" + data.degree + url[strings.LastIndexAny(url, "."):]
+	out, err := os.Create("temp\\" + file)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	_, err = io.Copy(out, resp.Body)
+	out.Close()
+	if url[strings.LastIndexAny(url, ".")+1:] == "xls" {
+		err = xls.Convert("temp\\" + file)
+		if err != nil {
+			fmt.Println("Convertor", err)
+			return err
+		}
+		file += "x"
+	}
+	if !file_comparison(file) {
+		if err = read_file(file, data); err != nil {
+			fmt.Println(err)
+			return err
+		}
+		if err = move_file(file); err != nil {
+			log.Println(err)
+			return err
+		}
+
+	}
+	return nil
+}
+
 func connect(url string, count int) (*http.Response, error) {
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != http.StatusOK {
@@ -46,14 +107,6 @@ func connect(url string, count int) (*http.Response, error) {
 		resp, err = connect(url, count+1)
 	}
 	return resp, err
-}
-
-func check_directory() {
-	os.RemoveAll("temp")
-	os.Mkdir("temp", 0777)
-	if _, err := os.Stat("last"); os.IsNotExist(err) {
-		os.Mkdir("last", 0777)
-	}
 }
 
 func parse_site() error {
@@ -122,7 +175,7 @@ func getMD5SumString(f *os.File) (string, error) {
 	return fmt.Sprintf("%X", fileSum.Sum(nil)), nil
 }
 
-func read_file(file string) error {
+func read_file(file string, data Links) error {
 	xlsxFile, err := excelize.OpenFile("temp\\" + file)
 	if err != nil {
 		return fmt.Errorf("Read file: %s%s%s", file, " - ", err)
@@ -131,14 +184,15 @@ func read_file(file string) error {
 	defer xlsxFile.Close()
 	lists := xlsxFile.GetSheetList()
 	for _, sheetName := range lists {
-		read_list(xlsxFile, sheetName)
+		read_list(xlsxFile, sheetName, data)
 	}
 	return nil
 }
 
-func read_list(xlsxFile *excelize.File, sheetName string) {
+func read_list(xlsxFile *excelize.File, sheetName string, data Links) {
 	find_group := false
 	rowIndex := 2
+	re := regexp.MustCompile(`\p{L}\p{L}\p{L}\p{L}-\d\d-\d\d`)
 	if find_group {
 		return
 	}
@@ -146,6 +200,7 @@ func read_list(xlsxFile *excelize.File, sheetName string) {
 	for columnIndex := 1; ; columnIndex++ {
 		group, _ := xlsxFile.GetCellValue(sheetName, cell_name(columnIndex)+strconv.Itoa(rowIndex))
 		if status, _ := regexp.MatchString(`\p{L}\p{L}\p{L}\p{L}-\d\d-\d\d`, clear_str(group)); status {
+			group = re.FindString(group)
 			count_day := -1
 			count_free = 0
 			for row := rowIndex + 2; ; row += 2 {
@@ -155,8 +210,8 @@ func read_list(xlsxFile *excelize.File, sheetName string) {
 				}
 				_, err := strconv.Atoi(number)
 				if err == nil {
-					read_data(xlsxFile, sheetName, columnIndex, number, count_day, group, row, row)
-					read_data(xlsxFile, sheetName, columnIndex, number, count_day, group, row+1, row)
+					read_data(xlsxFile, sheetName, columnIndex, number, count_day, group, row, row, data)
+					read_data(xlsxFile, sheetName, columnIndex, number, count_day, group, row+1, row, data)
 
 				} else {
 					break
@@ -177,62 +232,23 @@ func read_list(xlsxFile *excelize.File, sheetName string) {
 }
 
 func read_data(xlsxFile *excelize.File, sheetName string, columnIndex int, number string, count_day int,
-	group string, elem int, row int) {
+	group string, elem int, row int, data Links) {
 	subject, _ := xlsxFile.GetCellValue(sheetName, cell_name(columnIndex)+strconv.Itoa(elem))
 	type_of_subject, _ := xlsxFile.GetCellValue(sheetName, cell_name(columnIndex+1)+strconv.Itoa(elem))
 	lecturer, _ := xlsxFile.GetCellValue(sheetName, cell_name(columnIndex+2)+strconv.Itoa(elem))
 	auditorium, _ := xlsxFile.GetCellValue(sheetName, cell_name(columnIndex+3)+strconv.Itoa(elem))
-	day := days[count_day]
-	log.Println(group, day, type_of_week[elem-row], clear_str(number),
-		clear_str(subject), clear_str(lecturer), clear_str(auditorium), clear_str(type_of_subject))
+	pgsql.MainFunc(group, count_day+1, elem-row+1, clear_str(number), clear_str(subject),
+		clear_str(lecturer), clear_str(auditorium), clear_str(type_of_subject), data.institute, data.course)
 }
 
 func clear_str(str string) string {
-	return strings.TrimSpace(strings.ReplaceAll(str, "\n", " "))
+	tmp := strings.TrimSpace(strings.ReplaceAll(str, "\n", " "))
+	return strings.ReplaceAll(tmp, "\t", " ")
 }
 
 func cell_name(number int) string {
 	name, _ := excelize.ColumnNumberToName(number)
 	return name
-}
-
-func download(url string, data Links, queue_download *sync.WaitGroup) error {
-	defer queue_download.Done()
-	resp, err := connect(url, 0)
-	defer resp.Body.Close()
-
-	if err != nil {
-		return err
-	}
-	file := strings.Join(strings.Fields(data.institute), "-") + "_" +
-		strings.Join(strings.Fields(data.course), "-") + "_" + data.degree + url[strings.LastIndexAny(url, "."):]
-	out, err := os.Create("temp\\" + file)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	_, err = io.Copy(out, resp.Body)
-	out.Close()
-	if url[strings.LastIndexAny(url, ".")+1:] == "xls" {
-		err = xls.Convert("temp\\" + file)
-		if err != nil {
-			fmt.Println("Convertor", err)
-			return err
-		}
-		file += "x"
-	}
-	if !file_comparison(file) {
-		if err = read_file(file); err != nil {
-			fmt.Println(err)
-			return err
-		}
-		if err = move_file(file); err != nil {
-			log.Println(err)
-			return err
-		}
-
-	}
-	return nil
 }
 
 func move_file(file string) error {
@@ -252,16 +268,5 @@ func move_file(file string) error {
 	if err != nil {
 		return fmt.Errorf("Writing to output file failed: %s", err)
 	}
-	return nil
-}
-
-func loader() error {
-	log.Println("Start loader")
-	var queue_download sync.WaitGroup
-	for link, data := range links {
-		queue_download.Add(1)
-		go download(link, data, &queue_download)
-	}
-	queue_download.Wait()
 	return nil
 }

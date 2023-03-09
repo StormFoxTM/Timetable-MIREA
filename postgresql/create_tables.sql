@@ -1,4 +1,7 @@
 CREATE DATABASE TimeTableDB;
+CREATE USER api WITH PASSWORD 'api';
+CREATE USER client WITH PASSWORD 'client';
+
 ALTER ROLE admin SET client_encoding TO 'utf8';
 GRANT ALL PRIVILEGES ON DATABASE TimeTableDB TO admin;
 
@@ -56,7 +59,7 @@ CREATE SEQUENCE id_group_seq START WITH 1;
 CREATE TABLE IF NOT EXISTS study_group
 (
     id_group integer NOT NULL DEFAULT nextval('id_group_seq'),
-    group_name character(20) NOT NULL,
+    group_name character(10) NOT NULL,
     id_institute integer,
     id_of_course integer NOT NULL,
     id_degree integer,
@@ -74,3 +77,82 @@ CREATE TABLE IF NOT EXISTS timetable
     type_of_week integer NOT NULL,
     CONSTRAINT fkey PRIMARY KEY (id_to_group, subject_to_number, day_week, type_of_week)
 );
+
+INSERT INTO degree (degree_of_study)
+VALUES (
+        'Бакалавриат'
+    ),
+    (
+        'Специалитет'
+    ),
+    (
+        'Магистратура'
+    ),
+    (
+        'Аспирантура'
+    );
+
+INSERT INTO course (id_of_course)
+VALUES (
+        1
+    ),
+    (
+        2
+    ),
+    (
+        3
+    ),
+    (
+        4
+    ),
+    (
+        5
+    ),
+    (
+        6
+    ),
+    (
+        7
+    );
+
+INSERT INTO call_schedule (subject_number, time_start, time_end)
+VALUES (
+        1,
+        '9:00:00',
+        '10:30:00'
+    ),
+    (
+        2,
+        '10:40:00',
+        '12:10:00'
+    ),
+    (
+        3,
+        '12:40:00',
+        '14:10:00'
+    ),
+    (
+        4,
+        '14:20:00',
+        '15:50:00'
+    ),
+    (
+        5,
+        '16:20:00',
+        '17:50:00'
+    ),
+    (
+        6,
+        '18:00:00',
+        '19:30:00'
+    ),
+    (
+        7,
+        '18:30:00',
+        '20:00:00'
+    ),
+    (
+        8,
+        '20:10:00',
+        '21:40:00'
+    );

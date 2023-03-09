@@ -3,12 +3,18 @@ version: "3.0"
 services:
 
   postgres:
+    hostname: timetable.postgres
     build: 
       context: ./
-      dockerfile:   postgres/Dockerfile.postgres
-    restart: unless-stopped
+      dockerfile:   postgresql/Dockerfile.postgres
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=10000"
+      - "-c"
+      - "shared_buffers=3GB"
     env_file:
-      - admin.env
+      - .env
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -27,7 +33,7 @@ services:
     restart: unless-stopped
     command: bash -rc ""
     env_file:
-      - client.env
+      - .env
     healthcheck:
       test: curl -sS http://0.0.0.0:8000 || echo 1
       interval: 5s
@@ -46,7 +52,7 @@ services:
     stdin_open: true
     tty: true
     env_file:
-      - api.env
+      - .env
     depends_on:
       postgres:
         condition: service_healthy
@@ -59,8 +65,8 @@ services:
     ports:
       - '8080:8080'
     depends_on:
-      web:
-        condition: service_healthy
+      # web:
+      #   condition: service_healthy
       api:
         condition: service_healthy
 
@@ -69,11 +75,10 @@ services:
     build:
       context: ./
       dockerfile: parser/Dockerfile.parser
-    restart: unless-stopped
     stdin_open: true
     tty: true
     depends_on:
-      nginx:
+      postgres:
         condition: service_healthy
 
   telegram:
@@ -85,7 +90,7 @@ services:
     stdin_open: true
     tty: true
     env_file:
-      - client.env
+      - .env
     depends_on:
       api:
         condition: service_healthy

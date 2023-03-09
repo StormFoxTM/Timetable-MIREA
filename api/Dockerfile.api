@@ -1,1 +1,6 @@
-FROM baseImage
+FROM golang:latest
+RUN mkdir /api
+ADD ./api/src /api/
+WORKDIR /api
+RUN go build -o main .
+CMD ["/api/main"]
