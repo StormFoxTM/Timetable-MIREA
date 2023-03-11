@@ -93,7 +93,6 @@ func download(url string, data Links, queue_download *sync.WaitGroup) error {
 			log.Println(err)
 			return err
 		}
-
 	}
 	return nil
 }
