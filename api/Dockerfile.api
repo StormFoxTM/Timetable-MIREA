@@ -2,5 +2,5 @@ FROM golang:latest
 RUN mkdir /api
 ADD ./api/src /api/
 WORKDIR /api
-RUN go build -o main .
+RUN go mod init knocker && go mod tidy && go build -o main .
 CMD ["/api/main"]
