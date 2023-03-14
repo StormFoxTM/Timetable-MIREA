@@ -57,10 +57,10 @@ func MainFunc(group string, day int, type_of_week int, number string,
 	subject string, lecturer string, auditorium string, type_of_subject string, institute string, course string) {
 	urlDB := "postgres://admin:admin@postgres:5432/TimeTableDB"
 	db, err := pgx.Connect(context.Background(), urlDB)
-	defer db.Close(context.Background())
 	if err != nil {
 		fmt.Errorf("Error to connect db", err)
 	} else {
+		defer db.Close(context.Background())
 		int_course, _ := strconv.Atoi(course)
 		addTimetable(db, group, day, type_of_week, number, subject, lecturer, auditorium, type_of_subject, institute, int_course+1)
 	}
