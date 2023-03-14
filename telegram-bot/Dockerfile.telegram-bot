@@ -4,16 +4,16 @@ FROM python:3.10.0-alpine3.15
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-# # Копируем файл с зависимостями
-# COPY requirements.txt .
+# Копируем файл с зависимостями
+COPY ./telegram-bot/requirements.txt .
 
-# # Устанавливаем зависимости и удаляем ненужные пакеты
-# RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev \
-#     && pip install --no-cache-dir -r requirements.txt \
-#     && apk del gcc musl-dev libffi-dev openssl-dev
+# Устанавливаем зависимости и удаляем ненужные пакеты
+RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apk del gcc musl-dev libffi-dev openssl-dev
 
-# # Копируем все файлы из текущего каталога в контейнер
-# COPY . .
+# Копируем все файлы из текущего каталога в контейнер
+COPY ./telegram-bot/* .
 
-# # Запускаем основной файл
-# CMD [ "python", "main.py" ]
+# Запускаем основной файл
+CMD [ "python", "bot.py" ]
