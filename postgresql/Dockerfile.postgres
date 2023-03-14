@@ -1,2 +1,23 @@
 FROM postgres:13.3
+
+# Очищаем директорию перед инициализацией кластера
+RUN rm -rf /var/lib/postgresql/data/*
 COPY ./postgresql/create_tables.sql /docker-entrypoint-initdb.d/create_tables.sql
+
+# Создаем том
+VOLUME /var/lib/postgresql/data
+
+# Увеличиваем shared_buffers до 5% от доступной памяти
+RUN echo "shared_buffers = $(awk '/MemTotal/ {printf "%dMB", $2 * 0.05 * 1024 / 2048}' /proc/meminfo)" >> /var/lib/postgresql/data/postgresql.conf
+
+# Увеличиваем effective_cache_size до 10% от доступной памяти
+RUN echo "effective_cache_size = $(awk '/MemTotal/ {printf "%dMB", $2 * 0.2 * 1024 / 2048}' /proc/meminfo)" >> /var/lib/postgresql/data/postgresql.conf
+
+# Увеличиваем work_mem до 128MB
+RUN echo "work_mem = 128MB" >> /var/lib/postgresql/data/postgresql.conf
+
+# Увеличиваем max_connections до 500
+RUN echo "max_connections = 500" >> /var/lib/postgresql/data/postgresql.conf
+
+# Увеличиваем maintenance_work_mem до 3GB
+RUN echo "maintenance_work_mem = 3GB" >> /var/lib/postgresql/data/postgresql.conf
