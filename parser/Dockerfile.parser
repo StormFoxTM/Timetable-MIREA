@@ -1,10 +1,17 @@
-FROM golang:1.20
+# Базовый образ
+FROM golang:1.20-alpine as builder
+
 RUN mkdir /parser
 ADD ./parser/src /parser/
 WORKDIR /parser
-RUN go mod init knocker && go mod tidy && go build -o main .
-CMD ["/parser/main"]
 
-# FROM scratch
-# ADD ./parser/src /parser/
-# CMD ["/parser/main"]
+RUN apk update && apk add --no-cache git ca-certificates && \
+    go mod init knocker && go mod tidy && CGO_ENABLED=0 go build -ldflags="-s -w" -o main .
+
+# Конечный образ
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /parser/main .
+
+CMD ["./main"]
