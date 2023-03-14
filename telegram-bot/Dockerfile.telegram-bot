@@ -1,0 +1,19 @@
+# Используем образ Python 3.10.0 на базе Alpine 3.15 для уменьшения размера контейнера
+FROM python:3.10.0-alpine3.15
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# # Копируем файл с зависимостями
+# COPY requirements.txt .
+
+# # Устанавливаем зависимости и удаляем ненужные пакеты
+# RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev \
+#     && pip install --no-cache-dir -r requirements.txt \
+#     && apk del gcc musl-dev libffi-dev openssl-dev
+
+# # Копируем все файлы из текущего каталога в контейнер
+# COPY . .
+
+# # Запускаем основной файл
+# CMD [ "python", "main.py" ]
