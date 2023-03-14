@@ -1,0 +1,23 @@
+# Используем образ Node.js на базе Alpine 3.14 для уменьшения размера контейнера
+FROM node:alpine3.14
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# # Копируем файлы package.json и package-lock.json
+# COPY package*.json ./
+
+# # Устанавливаем зависимости, копируем все файлы проекта, очищаем кеш npm и собираем проект в одной команде, чтобы уменьшить количество слоев
+# RUN npm ci --only=production && \
+#     npm cache clean --force && \
+#     rm -rf /tmp/* && \
+#     rm -rf /var/cache/apk/* && \
+#     rm -rf ~/.npm && \
+#     chown -R node:node /app && \
+#     npm run build
+
+# # Запускаем сервер на порту 3000
+# EXPOSE 3000
+
+# # Запускаем приложение
+# CMD ["npm", "start"]
