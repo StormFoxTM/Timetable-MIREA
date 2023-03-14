@@ -2,22 +2,27 @@
 FROM node:alpine3.14
 
 # Устанавливаем рабочую директорию
-WORKDIR /app
+WORKDIR /timetable-mirea
 
-# # Копируем файлы package.json и package-lock.json
-# COPY package*.json ./
+# Копируем файлы package.json и package-lock.json
+COPY web-site/timetable-mirea/package*.json ./
 
-# # Устанавливаем зависимости, копируем все файлы проекта, очищаем кеш npm и собираем проект в одной команде, чтобы уменьшить количество слоев
-# RUN npm ci --only=production && \
-#     npm cache clean --force && \
-#     rm -rf /tmp/* && \
-#     rm -rf /var/cache/apk/* && \
-#     rm -rf ~/.npm && \
-#     chown -R node:node /app && \
-#     npm run build
+# Устанавливаем зависимости, копируем все файлы проекта, очищаем кеш npm и собираем проект в одной команде, чтобы уменьшить количество слоев
+RUN npm install --no-optional && \
+    npm ci --only=production && \
+    npm cache clean --force && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/* && \
+    rm -rf ~/.npm
 
-# # Запускаем сервер на порту 3000
-# EXPOSE 3000
+# Копируем файлы проекта
+COPY web-site/timetable-mirea/ .
 
-# # Запускаем приложение
-# CMD ["npm", "start"]
+# Собираем проект
+RUN npm run build
+
+# Запускаем сервер на порту 3000
+EXPOSE 3000
+
+# Запускаем приложение
+CMD ["npm", "start"]
