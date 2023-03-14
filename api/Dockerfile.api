@@ -1,6 +1,17 @@
-FROM golang:latest
+# Базовый образ
+FROM golang:1.20-alpine as builder
+
 RUN mkdir /api
 ADD ./api/src /api/
 WORKDIR /api
-RUN go mod init knocker && go mod tidy && go build -o main .
-CMD ["/api/main"]
+
+RUN apk update && apk add --no-cache git ca-certificates && \
+    go mod init knocker && go mod tidy && CGO_ENABLED=0 go build -ldflags="-s -w" -o main .
+
+# Конечный образ
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /api/main .
+
+CMD ["./main"]
