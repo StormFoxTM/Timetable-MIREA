@@ -1,13 +1,18 @@
 import telebot
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 # This is how it should be, but setting env variables in Windows is pain
 # import os
 # BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 # This is how it absolutely shouldn't be, but let's at least test it
-BOT_TOKEN = "<token>"
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 bot = telebot.TeleBot(BOT_TOKEN)
+
+print("Бот успешно запущен!")
 
 
 def get_timetable(group, period):
