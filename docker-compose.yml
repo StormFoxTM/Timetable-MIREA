@@ -1,4 +1,4 @@
-version: "3.0"
+version: "3.9"
 
 services:
 
@@ -7,12 +7,7 @@ services:
     build: 
       context: ./
       dockerfile:   postgresql/Dockerfile.postgres
-    command:
-      - "postgres"
-      - "-c"
-      - "max_connections=10000"
-      - "-c"
-      - "shared_buffers=3GB"
+    restart: on-failure:5
     env_file:
       - .env
     environment:
@@ -24,18 +19,19 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
     
   web:
     hostname: timetable.mirea
     build:
       context: ./
-      dockerfile: web-site/Dockerfile.web
-    restart: unless-stopped
-    command: bash -rc ""
+      dockerfile: web-site/Dockerfile.web-site
+    restart: on-failure:5
     env_file:
       - .env
     healthcheck:
-      test: curl -sS http://0.0.0.0:8000 || echo 1
+      test: curl -sS http://timetable.mirea:3000 || echo 1
       interval: 5s
       timeout: 5s
       retries: 5
@@ -48,11 +44,16 @@ services:
     build:
       context: ./
       dockerfile: api/Dockerfile.api
-    restart: unless-stopped
+    restart: on-failure:5
     stdin_open: true
     tty: true
     env_file:
       - .env
+    healthcheck:
+      test: curl -sS http://api.timetable:9888/api/timetable || echo 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
     depends_on:
       postgres:
         condition: service_healthy
@@ -61,13 +62,13 @@ services:
     build:
       context: ./
       dockerfile: nginx/Dockerfile.nginx
-    restart: unless-stopped
+    restart: on-failure:5
     ports:
       - '8080:8080'
     depends_on:
-      # web:
-      #   condition: service_healthy
       api:
+        condition: service_healthy
+      web:
         condition: service_healthy
 
   parser:
@@ -75,22 +76,31 @@ services:
     build:
       context: ./
       dockerfile: parser/Dockerfile.parser
-    stdin_open: true
-    tty: true
+    restart: on-failure:5
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   telegram:
     hostname: telegram.mirea
     build:
       context: ./
-      dockerfile: telegram-bot/Dockerfile.telegram
-    restart: unless-stopped
+      dockerfile: telegram-bot/Dockerfile.telegram-bot
+    restart: on-failure:5
     stdin_open: true
     tty: true
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; res = requests.get('https://t.me/test_001_un57a6l3_bot'); exit(0) if res.status_code == 200 else exit(1)"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     depends_on:
       api:
         condition: service_healthy
