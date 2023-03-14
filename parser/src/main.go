@@ -31,12 +31,18 @@ var (
 )
 
 func main() {
-	log.Println("Start parsing")
-	check_directory()
-	parse_site()
-	loader()
-	check_directory()
-	log.Println("End parsing")
+	for {
+		log.Println("Start parsing")
+		check_directory()
+		parse_site()
+		loader()
+		check_directory()
+		log.Println("End parsing")
+
+		nextHour := time.Now().Truncate(time.Hour).Add(time.Hour)
+		duration := nextHour.Sub(time.Now())
+		time.Sleep(duration)
+	}
 }
 
 func check_directory() {
@@ -52,8 +58,7 @@ func loader() error {
 	var queue_download sync.WaitGroup
 	for link, data := range links {
 		queue_download.Add(1)
-		// go download(link, data, &queue_download)
-		download(link, data, &queue_download)
+		go download(link, data, &queue_download)
 	}
 	queue_download.Wait()
 	return nil
