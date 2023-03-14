@@ -69,28 +69,39 @@ func MainFunc(group string, day int, type_of_week int, number string,
 func addTimetable(db *pgx.Conn, group string, day_week int, type_of_week int, subject_to_number string,
 	subject_title string, name_lecturer string, auditorium string, type_of_subject string, institute string, int_course int) {
 	var id_lecturer int
-	var id_group int
+	var StudyGroup study_group
 	id_lecturer = addLecturer(db, name_lecturer)
 
-	err := db.QueryRow(context.Background(), "SELECT id_group FROM study_group WHERE group_name=$1;", group).Scan(&id_group)
-	if err == pgx.ErrNoRows {
-		id_group = addGroup(db, group, institute, int_course)
+	err := db.QueryRow(context.Background(), "SELECT * FROM study_group WHERE group_name=$1;", group).Scan(&StudyGroup.id_group,
+		&StudyGroup.group_name, &StudyGroup.id_institute, &StudyGroup.id_of_course, &StudyGroup.id_degree)
+	if err == pgx.ErrNoRows || GetInstituteName(db, StudyGroup.id_institute) != institute || int_course != StudyGroup.id_of_course {
+		StudyGroup.id_group = addGroup(db, group, institute, int_course, err, StudyGroup.id_group)
 	}
 
-	if id_group != 0 {
+	if StudyGroup.id_group != 0 {
 		err_duplicate := db.QueryRow(context.Background(),
 			"SELECT id_to_group FROM timetable WHERE id_to_group=$1 AND subject_to_number=$2 AND day_week=$3 AND type_of_week=$4;",
-			id_group, subject_to_number, day_week, type_of_week).Scan(&id_group)
+			StudyGroup.id_group, subject_to_number, day_week, type_of_week).Scan(&StudyGroup.id_group)
 		if err_duplicate == pgx.ErrNoRows {
 			if id_lecturer == -1 {
 				db.QueryRow(context.Background(),
 					"INSERT INTO timetable (id_to_group, subject_to_number, subject_title, auditorium, day_week, type_of_week) "+
-						"VALUES ($1, $2, $3, $4, $5, $6);", id_group, subject_to_number, subject_title, auditorium, day_week, type_of_week)
+						"VALUES ($1, $2, $3, $4, $5, $6);", StudyGroup.id_group, subject_to_number, subject_title, auditorium, day_week, type_of_week)
 			} else {
 				db.QueryRow(context.Background(),
 					"INSERT INTO timetable (id_to_group, subject_to_number, id_lectur, subject_title, auditorium, day_week, type_of_week) "+
-						"VALUES ($1, $2, $3, $4, $5, $6, $7);", id_group, subject_to_number, id_lecturer, subject_title, auditorium,
+						"VALUES ($1, $2, $3, $4, $5, $6, $7);", StudyGroup.id_group, subject_to_number, id_lecturer, subject_title, auditorium,
 					day_week, type_of_week)
+			}
+		} else {
+			if id_lecturer == -1 {
+				db.QueryRow(context.Background(), "UPDATE timetable SET subject_title=$1, auditorium=$2 "+
+					"WHERE id_to_group=$3 AND subject_to_number=$4 AND day_week=$5 AND type_of_week=$6;", subject_title, auditorium,
+					StudyGroup.id_group, subject_to_number, day_week, type_of_week)
+			} else {
+				db.QueryRow(context.Background(), "UPDATE timetable SET id_lectur=$1, subject_title=$2, auditorium=$3 "+
+					"WHERE id_to_group=$4 AND subject_to_number=$5 AND day_week=$6 AND type_of_week=$7;", id_lecturer, subject_title,
+					auditorium, StudyGroup.id_group, subject_to_number, day_week, type_of_week)
 			}
 		}
 	}
@@ -116,18 +127,24 @@ func addLecturer(db *pgx.Conn, lecturers string) int {
 	return -1
 }
 
-func addGroup(db *pgx.Conn, group string, name_institute string, course int) int {
+func addGroup(db *pgx.Conn, group string, name_institute string, course int, lastErr error, id_group int) int {
 	var Study_Group study_group
 	var Institute institute
 
-	err := db.QueryRow(context.Background(), "SELECT id_of_the_institute FROM institute WHERE name_of_the_institute=$1;",
-		name_institute).Scan(&Institute.id_of_the_institute)
+	err := db.QueryRow(context.Background(), "SELECT * FROM institute WHERE name_of_the_institute=$1;",
+		name_institute).Scan(&Institute.name_of_the_institute)
 	if err == pgx.ErrNoRows {
 		Institute.id_of_the_institute = addInstitute(db, name_institute)
 	}
-	db.QueryRow(context.Background(),
-		"INSERT INTO study_group (group_name, id_institute, id_of_course, id_degree) VALUES ($1, $2, $3, $4) RETURNING id_group;",
-		group, Institute.id_of_the_institute, course, find_letter(group)).Scan(&Study_Group.id_group)
+	if lastErr == pgx.ErrNoRows {
+		db.QueryRow(context.Background(),
+			"INSERT INTO study_group (group_name, id_institute, id_of_course, id_degree) VALUES ($1, $2, $3, $4) RETURNING id_group;",
+			group, Institute.id_of_the_institute, course, find_letter(group)).Scan(&Study_Group.id_group)
+	} else {
+		db.QueryRow(context.Background(),
+			"UPDATE study_group SET id_institute=$1, id_of_course=$2 WHERE id_group=$3 RETURNING id_group;",
+			Institute.id_of_the_institute, course, id_group).Scan(&Study_Group.id_group)
+	}
 	return Study_Group.id_group
 }
 
@@ -136,6 +153,16 @@ func addInstitute(db *pgx.Conn, instituteName string) int {
 	db.QueryRow(context.Background(), "INSERT INTO institute (name_of_the_institute) VALUES ($1) RETURNING id_of_the_institute;",
 		instituteName).Scan(&id_of_the_institute)
 	return id_of_the_institute
+}
+
+func GetInstituteName(db *pgx.Conn, instituteID int) string {
+	var name_of_the_institute string
+	err_institute := db.QueryRow(context.Background(), "SELECT name_of_the_institute FROM institute WHERE id_of_the_institute=$1;",
+		instituteID).Scan(&name_of_the_institute)
+	if err_institute == nil {
+		return name_of_the_institute
+	}
+	return ""
 }
 
 func find_letter(group string) int {
