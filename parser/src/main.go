@@ -39,6 +39,7 @@ var (
 // Основная функция
 func main() {
 	// Бесконечный цикл
+	log.Println("Парсер успешно запущен!")
 	for {
 		// Вычисление времени до следующего запуска парсинга (каждый час)
 		nextHour := time.Now().Truncate(time.Hour).Add(time.Hour)

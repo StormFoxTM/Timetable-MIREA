@@ -85,32 +85,27 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     deploy:
       resources:
         limits:
           cpus: '0.3'
           memory: '3g'
 
-  telegram:
-    hostname: telegram.mirea
-    build:
-      context: ./
-      dockerfile: telegram-bot/Dockerfile.telegram-bot
-    restart: on-failure:5
-    stdin_open: true
-    tty: true
-    env_file:
-      - .env
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import requests; res = requests.get('https://t.me/MIREA_TimeTableBot'); exit(0) if res.status_code == 200 else exit(1)"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    depends_on:
-      api:
-        condition: service_healthy
+  # telegram:
+  #   hostname: telegram.mirea
+  #   build:
+  #     context: ./
+  #     dockerfile: telegram-bot/Dockerfile.telegram-bot
+  #   restart: on-failure:5
+  #   stdin_open: true
+  #   tty: true
+  #   env_file:
+  #     - .env
+  #   healthcheck:
+  #     test: ["CMD", "python3", "-c", "import requests; res = requests.get('https://t.me/MIREA_TimeTableBot'); exit(0) if res.status_code == 200 else exit(1)"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
+  #   depends_on:
+  #     api:
+  #       condition: service_healthy
