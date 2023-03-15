@@ -10,31 +10,37 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+// тип для работы с таблицей преподавателей
 type lecturer struct {
 	id_lecturer int
 	full_name   string
 }
 
+// тип для работы с таблицей расписания звонков
 type call_schedule struct {
 	subject_number int
 	time_start     time.Time
 	time_end       time.Time
 }
 
+// тип для работы с таблицей курсов
 type course struct {
 	id_of_course int
 }
 
+// тип для работы с таблицей степеней
 type degree struct {
 	id_of_degree    int
 	degree_of_study string
 }
 
+// тип для работы с таблицей институтов
 type institute struct {
 	id_of_the_institute   int
 	name_of_the_institute string
 }
 
+// тип для работы с таблицей учебных групп
 type study_group struct {
 	id_group     int
 	group_name   string
@@ -43,6 +49,7 @@ type study_group struct {
 	id_degree    int
 }
 
+// тип для работы с таблицей расписания занятий
 type timetable struct {
 	id_to_group       int
 	subject_to_number int
@@ -53,19 +60,21 @@ type timetable struct {
 	type_of_week      int
 }
 
+// основная функция, которая вызывается для добавления определённых данных в СУБД
 func MainFunc(group string, day int, type_of_week int, number string,
 	subject string, lecturer string, auditorium string, type_of_subject string, institute string, course string) {
-	urlDB := "postgres://admin:admin@postgres:5432/TimeTableDB"
-	db, err := pgx.Connect(context.Background(), urlDB)
+	urlDB := "postgres://admin:admin@postgres:5432/TimeTableDB" // адрес СУБД
+	db, err := pgx.Connect(context.Background(), urlDB)         // подключение к СУБД
 	if err != nil {
 		fmt.Errorf("Error to connect db", err)
 	} else {
-		defer db.Close(context.Background())
-		int_course, _ := strconv.Atoi(course)
+		defer db.Close(context.Background())  // закрытие соединения с СУБД
+		int_course, _ := strconv.Atoi(course) // превращения курса в число
 		addTimetable(db, group, day, type_of_week, number, subject, lecturer, auditorium, type_of_subject, institute, int_course+1)
 	}
 }
 
+// добавление расписания в СУБД
 func addTimetable(db *pgx.Conn, group string, day_week int, type_of_week int, subject_to_number string,
 	subject_title string, name_lecturer string, auditorium string, type_of_subject string, institute string, int_course int) {
 	var id_lecturer int
@@ -107,6 +116,7 @@ func addTimetable(db *pgx.Conn, group string, day_week int, type_of_week int, su
 	}
 }
 
+// добавление преподавателя в СУБД
 func addLecturer(db *pgx.Conn, lecturers string) int {
 	if lecturers != "" {
 		var Lecturer lecturer
@@ -127,6 +137,7 @@ func addLecturer(db *pgx.Conn, lecturers string) int {
 	return -1
 }
 
+// добавление группы в СУБД
 func addGroup(db *pgx.Conn, group string, name_institute string, course int, lastErr error, id_group int) int {
 	var Study_Group study_group
 	var Institute institute
@@ -148,6 +159,7 @@ func addGroup(db *pgx.Conn, group string, name_institute string, course int, las
 	return Study_Group.id_group
 }
 
+// добавление института в СУБД
 func addInstitute(db *pgx.Conn, instituteName string) int {
 	var id_of_the_institute int
 	db.QueryRow(context.Background(), "INSERT INTO institute (name_of_the_institute) VALUES ($1) RETURNING id_of_the_institute;",
@@ -155,6 +167,7 @@ func addInstitute(db *pgx.Conn, instituteName string) int {
 	return id_of_the_institute
 }
 
+// получение название института по его ID
 func GetInstituteName(db *pgx.Conn, instituteID int) string {
 	var name_of_the_institute string
 	err_institute := db.QueryRow(context.Background(), "SELECT name_of_the_institute FROM institute WHERE id_of_the_institute=$1;",
@@ -165,6 +178,7 @@ func GetInstituteName(db *pgx.Conn, instituteID int) string {
 	return ""
 }
 
+// поиск третий буквы в названии группы
 func find_letter(group string) int {
 	var letter rune
 	for i, elem := range group {
@@ -176,6 +190,7 @@ func find_letter(group string) int {
 	return find_id_degree(string(letter))
 }
 
+// определение степени обучения, которая зашифрована в 3 букве
 func find_id_degree(letter string) int {
 	switch letter {
 	case "Б":
