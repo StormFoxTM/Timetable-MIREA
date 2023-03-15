@@ -3,6 +3,7 @@ package main
 // Импортируем необходимые модули и библиотеки
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -21,6 +22,9 @@ func main() {
 	// Добавляем обработчик GET-запроса по пути "/api/timetable"
 	router.GET("/api/timetable", getFunction)
 
+	// Добавляем обработчик GET-запроса по пути "/api/info"
+	router.GET("/api/info", getInfo)
+
 	// Запускаем сервер Gin на порту 9888
 	err := router.Run(":9888")
 	if err != nil {
@@ -29,6 +33,58 @@ func main() {
 	}
 }
 
+// Функция для выдачи информации
+func getInfo(context *gin.Context) {
+	// Получаем параметры запроса
+	data := context.Request.URL.Query()
+
+	// Получаем количество параметров "group", "lecture" и "auditorium"
+	group := len(data["group"])
+	lecture := len(data["lecture"])
+	auditorium := len(data["auditorium"])
+
+	// В зависимости от того, сколько параметров указано, выбираем соответствующую функцию
+	switch 1 {
+	case group:
+		// Если не возникло ошибок, возвращаем успех
+		if err := check_group(context); err == nil {
+			context.String(http.StatusOK, "Группа есть в расписании!")
+		} else if err == errors.New("error connect to db") {
+			context.String(http.StatusBadRequest, "Ошибка в субд")
+		} else {
+			// Если возникли ошибки, возвращаем ошибку"
+			context.String(http.StatusBadRequest, "Группы нет в расписании!")
+		}
+
+	case lecture:
+		// Если не возникло ошибок, возвращаем успех
+		if err := check_lecture(context); err == nil {
+			context.String(http.StatusOK, "Преподаватель есть в расписании!")
+		} else if err == errors.New("error connect to db") {
+			context.String(http.StatusBadRequest, "Ошибка в субд")
+		} else {
+			// Если возникли ошибки, возвращаем ошибку"
+			context.String(http.StatusBadRequest, "Преподавателя нет в расписании!")
+		}
+
+	case auditorium:
+		// Если не возникло ошибок, возвращаем успех
+		if err := check_auditorium(context); err == nil {
+			context.String(http.StatusOK, "Аудитория есть в раписании!")
+		} else if err == errors.New("error connect to db") {
+			context.String(http.StatusBadRequest, "Ошибка в субд")
+		} else {
+			// Если возникли ошибки, возвращаем ошибку"
+			context.String(http.StatusBadRequest, "Аудитории нет в расписании!")
+		}
+
+	// Если количество параметров не соответствует ни одному из вариантов, возвращаем ошибку "Ошибка в запросе!"
+	default:
+		context.String(http.StatusBadRequest, "Ошибка в запросе!")
+	}
+}
+
+// Функция для выдачи расписания
 func getFunction(context *gin.Context) {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
@@ -150,4 +206,31 @@ func getWeekAndDay(context *gin.Context) (int, int) {
 	}
 	// Возвращаем значения в числовом формате
 	return week_int, day_int
+}
+
+// Проверка группы на наличие в расписании
+func check_group(context *gin.Context) error {
+	// Получаем параметры запроса
+	data := context.Request.URL.Query()
+	_, err := pgsql.GetGroupID(data["group"][0])
+
+	return err
+}
+
+// Проверка преподавателя на присутствие в расписании
+func check_lecture(context *gin.Context) error {
+	// Получаем параметры запроса
+	data := context.Request.URL.Query()
+	_, err := pgsql.GetLecturerID(data["lecture"][0])
+
+	return err
+}
+
+// Проверка аудитории на наличие в расписании
+func check_auditorium(context *gin.Context) error {
+	// Получаем параметры запроса
+	data := context.Request.URL.Query()
+	_, err := pgsql.CheckAuditorium(data["auditorium"][0])
+
+	return err
 }

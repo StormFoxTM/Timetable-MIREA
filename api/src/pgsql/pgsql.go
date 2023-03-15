@@ -2,6 +2,7 @@ package pgsql
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"time"
 
@@ -361,8 +362,9 @@ func GetLecturerID(lecturer_name string) (int, error) {
 		if err == nil {
 			return id_lecturer, nil
 		}
+		return 0, err
 	}
-	return 0, err
+	return 0, errors.New("error connect to db")
 }
 
 // Функция получения идентификатора группы по ее названию
@@ -377,8 +379,23 @@ func GetGroupID(group string) (int, error) {
 		if err == nil {
 			return group_ID, nil
 		}
+		return 0, err
 	}
-	return 0, nil
+	return 0, errors.New("error connect to db")
+}
+
+// Функция проверки аудитории на наличие в расписании
+func CheckAuditorium(auditorium string) error {
+	// Открытие соединения с БД
+	db, err := connectToDB()
+	if err == nil {
+		defer db.Close()
+		var group_ID int
+		// Выполнение запроса на выборку идентификатора группы из БД
+		err = db.QueryRow(context.Background(), "SELECT id_to_group FROM timetable WHERE auditorium=$1;", auditorium).Scan(&group_ID)
+		return err
+	}
+	return errors.New("error connect to db")
 }
 
 // Функция получения идентификатора института по его названию
