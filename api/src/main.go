@@ -230,7 +230,7 @@ func check_lecture(context *gin.Context) error {
 func check_auditorium(context *gin.Context) error {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
-	_, err := pgsql.CheckAuditorium(data["auditorium"][0])
+	err := pgsql.CheckAuditorium(data["auditorium"][0])
 
 	return err
 }
