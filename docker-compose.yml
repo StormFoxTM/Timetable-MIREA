@@ -107,7 +107,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: ["CMD", "python3", "-c", "import requests; res = requests.get('https://t.me/stormcrown_bot'); exit(0) if res.status_code == 200 else exit(1)"]
+      test: ["CMD", "python3", "-c", "import requests; res = requests.get('https://t.me/MIREA_TimeTableBot'); exit(0) if res.status_code == 200 else exit(1)"]
       interval: 5s
       timeout: 5s
       retries: 5
