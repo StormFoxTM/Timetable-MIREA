@@ -38,21 +38,34 @@ var (
 
 // Основная функция
 func main() {
-	// Бесконечный цикл
 	log.Println("Парсер успешно запущен!")
+	// Запуск функции для проверки здоровья контейнера
+	go healthcheack()
+	// Бесконечный цикл
 	for {
+		// Запуск процесса обновления данных
+		start_script()
+
 		// Вычисление времени до следующего запуска парсинга (каждый час)
 		nextHour := time.Now().Truncate(time.Hour).Add(time.Hour)
 		duration := nextHour.Sub(time.Now())
 		// Задержка выполнения на время до следующего запуска
 		time.Sleep(duration)
-		start_script()
 	}
+}
+
+// Функция для проверки здоровья контейнера
+func healthcheack() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello, World!")
+	})
+
+	log.Fatal(http.ListenAndServe(":9009", nil))
 }
 
 func start_script() {
 	// Вывод в лог сообщения о начале парсинга
-	log.Println("Start parsing")
+	log.Println("Запущен процесс обновления расписания")
 	// Удаление каталога "temp" и его содержимого
 	check_directory()
 	// Парсинг сайта и сохранение полученных файлов в каталог "temp"
