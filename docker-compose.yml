@@ -7,34 +7,42 @@ services:
     build: 
       context: ./
       dockerfile:   postgresql/Dockerfile.postgres
-    restart: on-failure:5
-    env_file:
-      - .env
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    env_file:
+      - .env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${POSTGRES_USER}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - ./postgresql/data:/var/lib/postgresql/data
+      interval: 1m
+      timeout: 10s
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 10m
     
   web:
     hostname: timetable.mirea
     build:
       context: ./
       dockerfile: web-site/Dockerfile.web-site
-    restart: on-failure:5
     env_file:
       - .env
     healthcheck:
       test: curl -sS http://timetable.mirea:3000 || echo 1
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      interval: 1m
+      timeout: 10s
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
     depends_on:
       postgres:
         condition: service_healthy
@@ -44,16 +52,14 @@ services:
     build:
       context: ./
       dockerfile: api/Dockerfile.api
-    restart: on-failure:5
     stdin_open: true
     tty: true
     env_file:
       - .env
     healthcheck:
       test: curl -sS http://api.timetable:9888/api/timetable || echo 1
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      interval: 1m
+      timeout: 10s
     depends_on:
       postgres:
         condition: service_healthy
@@ -62,14 +68,30 @@ services:
         limits:
           cpus: '0.4'
           memory: '4g'
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 10m
 
   nginx:
     build:
       context: ./
       dockerfile: nginx/Dockerfile.nginx
-    restart: on-failure:5
     ports:
       - '8080:8080'
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "service", "nginx", "status"]
+      interval: 1m
+      timeout: 10s
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 10m
     depends_on:
       api:
         condition: service_healthy
@@ -81,31 +103,45 @@ services:
     build:
       context: ./
       dockerfile: parser/Dockerfile.parser
-    restart: on-failure:5
-    depends_on:
-      postgres:
-        condition: service_healthy
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9009"]
+      interval: 20m
+      timeout: 10s
     deploy:
       resources:
         limits:
           cpus: '0.3'
           memory: '3g'
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 1h
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   telegram:
     hostname: telegram.mirea
     build:
       context: ./
       dockerfile: telegram-bot/Dockerfile.telegram-bot
-    restart: on-failure:5
     stdin_open: true
     tty: true
     env_file:
       - .env
     healthcheck:
       test: ["CMD", "python3", "-c", "import requests; res = requests.get('https://t.me/MIREA_TimeTableBot'); exit(0) if res.status_code == 200 else exit(1)"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      interval: 5m
+      timeout: 10s
     depends_on:
       api:
         condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 1h
