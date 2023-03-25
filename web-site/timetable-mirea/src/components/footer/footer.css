@@ -1,0 +1,16 @@
+footer {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    align-content: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+.footer_main{
+    z-index: 1;
+    padding: 10px;
+    font-size: 30px;
+    text-decoration: none;
+    color: rgb(54, 52, 48);
+}

@@ -1,14 +1,19 @@
-import './App.css';
+import Main from './pages/Main/Main';
+import TimeTable from './pages/TimeTable/TimeTable';
+import Authorization from './pages/Authorization/Authorization';
+import Register from './pages/Register/Register';
+import {Routes, Route} from 'react-router-dom'
+
 
 function App() {
   return (
     <body>
-      <main className="main_page">
-          <h1>Сайт расписание РТУ МИРЭА</h1>
-          <p>Данный портал предоставляет возможность смотреть расписание для своей группы.</p>
-          <p>Расписание берется из excel файлов, которые выкладываются на официальном сайте МИРЭА. Данные на портале обновляются автоматически, раз в 4 часа.</p>
-          <p>Для просмотра расписания необходимо зарегистрироваться и перейти на страницу <p>Расписание.</p></p>
-      </main>
+      <Routes>
+      <Route path='/' element={<Main/>}/>
+      <Route path='/authorization' element={<Authorization/>}/>
+      <Route path='/register' element={<Register/>}/>
+      <Route path='/timeTable' element={<TimeTable/>}/>
+      </Routes>
     </body>
   );
 }

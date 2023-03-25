@@ -1,0 +1,103 @@
+.login_block {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    min-width: 100%;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    align-content: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+.container_login {
+    padding: 40px;
+    border: solid 1px blue;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    align-content: space-between;
+    -webkit-box-pack: center;
+    justify-content: center;
+    background-color: #FFFFFF;
+}
+
+.container_login_wrapper {
+    width: 100%;
+    clear: both; 
+    text-align: right; 
+    line-height: 25px;
+}
+
+.login_main_text {
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+.error {
+    color: red;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+.form-input {
+    height: 22px;
+    width: 270px;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+.login_text{
+    float: left; 
+    padding: 10px;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+#enter {
+    font-size: 25px;
+    margin-bottom: 30px;
+    width: 100%;
+    background-color: blue;
+    color: white;
+    border: 0;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    align-content: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+#enter:hover {
+    background-color: #3552CF;
+}
+
+.registration_button {
+    padding: 10px;
+    margin-top: 8px;
+    font-size: 20px;
+    text-decoration: none;
+
+    color: rgb(54, 52, 48);
+
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    align-content: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+.registration_button:hover {
+    color: black;
+}

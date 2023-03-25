@@ -1,0 +1,18 @@
+.main_page {
+    display: flex; 
+    flex-direction: column;
+    padding: 30px;
+}
+
+.main_page h1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.main_page p{
+    font-size: 24px;
+    padding: 10px;
+    padding-left: 30px;
+}
