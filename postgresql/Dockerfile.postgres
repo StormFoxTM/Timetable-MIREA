@@ -11,7 +11,7 @@ VOLUME /var/lib/postgresql/data
 RUN echo "shared_buffers = $(awk '/MemTotal/ {printf "%dMB", $2 * 0.05 * 1024 / 2048}' /proc/meminfo)" >> /var/lib/postgresql/data/postgresql.conf
 
 # Увеличиваем effective_cache_size до 10% от доступной памяти
-RUN echo "effective_cache_size = $(awk '/MemTotal/ {printf "%dMB", $2 * 0.2 * 1024 / 2048}' /proc/meminfo)" >> /var/lib/postgresql/data/postgresql.conf
+RUN echo "effective_cache_size = $(awk '/MemTotal/ {printf "%dMB", $2 * 0.1 * 1024 / 2048}' /proc/meminfo)" >> /var/lib/postgresql/data/postgresql.conf
 
 # Увеличиваем work_mem до 128MB
 RUN echo "work_mem = 128MB" >> /var/lib/postgresql/data/postgresql.conf
