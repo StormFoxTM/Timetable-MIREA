@@ -1,20 +1,28 @@
-import './Register.css';
+import Elem from './Elem';
+import r from './Register.module.css';
+import {NavLink} from "react-router-dom"
 
-function Register() {
-  return (
-    <div className='login_block'>
-    <div className='container_login'>
-            <div className='login_main_text'>Регистрация</div>
-            <form method="POST">
-                <p>Введите логин: <input className='form-input' /></p>
-                <p>Введите email: <input  type='email' className='form-input' /></p>
-                <p>Введите пароль: <input type='password' className='form-input' /></p>
-                <p>Повторите пароль: <input type='password' className='form-input' /></p>
-                <button type="submit" id="enter">Регистрация</button>
-            </form>
+
+const Register = () => {
+    return (
+        <div className={r.login_block}>
+        <div className={r.container_register}>
+                <form>
+                    <Elem name='Адрес электронной почты'/>
+                    <Elem name='Логин'/>
+                    <Elem name='Пароль'/>
+                    <Elem name='Подтверждение пароля'/>
+                    <div>
+                        <button className={r.activ_button}><p className={r.text_form}>Зарегистрироваться</p></button>
+                    </div>
+                    <div className={r.container_or}><p className={r.text_form}>или</p></div>
+                    <div><NavLink to='/authorization'>
+                  <button className={r.registration_button}><p className={r.text_form}>Войти</p></button>
+                  </NavLink></div>
+                </form>
+            </div>
         </div>
-    </div>
-  );
+    );
 }
 
 export default Register;

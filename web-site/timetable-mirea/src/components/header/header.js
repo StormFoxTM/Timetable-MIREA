@@ -1,22 +1,31 @@
 import {NavLink} from 'react-router-dom'
 import './header.css'
 
+const Heder_elem = (props) => {
+    return(
+        <NavLink to={props.k_ref}
+        className={props.name_class}>
+            {props.name}
+        </NavLink>
+    );
+}
+
 const Header = () => {
     return(
-    <header>
-        <header className="header-left">
-            <NavLink to='/' className="main_header">Главная</NavLink>
-            <NavLink to='/timeTable' className="timetable_header">Расписание</NavLink>
-        </header>
-        <header className="header-right">
+    <header className="header">
+        <div className="header_left">
+            <Heder_elem k_ref='/' name='Расписание' name_class='main_header' />
+        </div>
+        <div className="header_right">
             <div className="dropdown">
-                <NavLink className="settings">Настройки</NavLink>
-                <div id="popup" className="dropdown-content">
-                    <NavLink to='/change_themes' className="background" href="/change_themes">Сменить тему</NavLink>
+            <Heder_elem k_ref='/setting' name='Настройки' name_class='settings' />
+                {/* <NavLink to='/change_themes' className="background" href="/change_themes">Сменить тему</NavLink> */}
                 </div>
+            <div id="popup" className="dropdown_content">
+            <Heder_elem k_ref='/authorization' name='Войти' name_class='login' />
             </div>
-            <NavLink to='/authorization' className="login">Войти</NavLink>
-        </header>
+            
+        </div>
     </header>
     );
 }

@@ -1,18 +1,18 @@
-import Main from './pages/Main/Main';
 import TimeTable from './pages/TimeTable/TimeTable';
-import Authorization from './pages/Authorization/Authorization';
+import Authorization from './pages/Register/Authorization';
 import Register from './pages/Register/Register';
+import Setting from './pages/Setting/Setting';
 import {Routes, Route} from 'react-router-dom'
-
+import './App.css';
 
 function App() {
   return (
     <body>
       <Routes>
-      <Route path='/' element={<Main/>}/>
+      <Route path='/' element={<TimeTable/>}/>
       <Route path='/authorization' element={<Authorization/>}/>
       <Route path='/register' element={<Register/>}/>
-      <Route path='/timeTable' element={<TimeTable/>}/>
+      <Route path='/setting' element={<Setting />}/>
       </Routes>
     </body>
   );

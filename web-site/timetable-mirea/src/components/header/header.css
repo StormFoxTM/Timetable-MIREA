@@ -1,229 +1,108 @@
-/* Убираем внешние отступы */
-body,
-h1,
-h2,
-h3,
-h4,
-p,
-ul[class],
-ol[class],
-li,
-figure,
-figcaption,
-blockquote,
-dl,
-dd,
-div {
-  margin: 0;
+.header{
+    position: absolute;
+    width: 100vw;
+    height: 8vh;
+    left: 0px;
+    top: 0px;
+    
+    background: #42494D;
 }
 
-/* Выставляем основные настройки по-умолчанию для body */
-body {
-    min-height: 100vh;
-    scroll-behavior: smooth;
-    text-rendering: optimizeSpeed;
-    line-height: 1.5;
-    display: -webkit-box;
-    display: flex;
-    flex-direction: column;
-    color: #333333;
-    background-color: #EDEEF0;
-}
-
-/* Настройки header */
-
-header {
-    z-index: 5;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
-    height: 7vh;
-    padding-right: 10px;
-    padding-left: 10px;
-    background-color: #FFFFFF;
-}
-
-main {
-    z-index: 1;
-    display: -webkit-box;
-    display: flex;
-    max-height: 90vh;
+.header_left{
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    left: 35px;
+    top: 10px;
 }
 
 .main_header{
-    z-index: 1;
-    padding: 10px;
-    font-size: 30px;
-    text-decoration: none;
-    color: rgb(54, 52, 48);
-}
+    position: absolute;
+    width: 66px;
+    height: 30px;
+    left: 7px;
+    top: 0px;
 
-.timetable_header {
-    z-index: 1;
-    padding: 10px;
-    margin-top: 8px;
+    text-decoration: none;
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 500;
     font-size: 20px;
-    text-decoration: none;
-    color: rgb(54, 52, 48);
+    line-height: 30px;
+
+    /* identical to box height */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    text-transform: capitalize;
+
+    color: #F6F7EB;
 }
 
-.login {
-    z-index: 1;
-    padding: 10px;
-    color: rgb(54, 52, 48);
-    font-size: 20px;
-    text-decoration: none;
-}
-
-.background,  .light,  .dark,
-.settings {
-    z-index: 1;
-    padding: 10px;
-    font-size: 20px;
-    text-decoration: none;
-    color: rgb(54, 52, 48);
-}
-
-
-.setting_exit {
-    padding: 10px;
-    font-size: 20px;
-    text-decoration: none;
-    color: rgb(186, 174, 146);
-    border-bottom: solid rgb(187, 187, 187);
-}
-
-.main_header:hover,   .login:hover,  .settings:hover,   .background:hover,   .light:hover, 
-  .timetable_header:hover, .setting_exit:hover,  .light:hover,  .dark:hover {
-    color: black;
+.header_right{
+    position: absolute;
+    width: 270px;
+    height: 30px;
+    left: 1135px;
+    top: 10px;
 }
 
 .dropdown{
-    margin-top: 10px;
-    position: relative;
-    color: rgb(54, 52, 48);
-}
-
-.dropdown-content {
-    display: none;
     position: absolute;
-    top: 40px;
-    right: -50px;
-    background-color: #f1f1f1;
-    min-width: 220px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-
-    color: rgb(54, 52, 48);
+    width: 85px;
+    height: 30px;
+    left: 0px;
+    top: 0px;
 }
 
-.dropdown-content a {
-    color: rgb(54, 52, 48);
-    padding: 12px 16px;
+.dropdown_content{
+    position: absolute;
+    width: 150px;
+    height: 30px;
+    left: 120px;
+    top: 0px;
+}
+
+.settings{
+    position: absolute;
+    width: 85px;
+    height: 30px;
+    left: 0px;
+    top: 0px;
+    
     text-decoration: none;
-    display: block;
-}
-
-.login_block {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    min-width: 100%;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    align-content: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-}
-
-.container_login {
-    padding: 40px;
-    border: solid 1px blue;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    flex-direction: column;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    align-content: space-between;
-    -webkit-box-pack: center;
-    justify-content: center;
-    background-color: #FFFFFF;
-}
-
-.container_login_wrapper {
-    width: 100%;
-    clear: both; 
-    text-align: right; 
-    line-height: 25px;
-}
-
-.login_main_text {
-    font-size: 30px;
-    margin-bottom: 30px;
-}
-
-.error {
-    color: red;
-    margin-top: 20px;
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 500;
     font-size: 20px;
-}
-
-.form-input {
-    height: 22px;
-    width: 270px;
-    font-size: 15px;
-    margin-bottom: 30px;
-}
-
-.login_text{
-    float: left; 
-    padding: 10px;
-    font-size: 20px;
-    margin-bottom: 5px;
-}
-
-#enter {
-    font-size: 25px;
-    margin-bottom: 30px;
-    width: 100%;
-    background-color: blue;
-    color: white;
-    border: 0;
-    display: -webkit-box;
+    line-height: 30px;
+    
+    /* identical to box height */
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
-    align-content: center;
-    -webkit-box-pack: center;
-    justify-content: center;
+    text-align: center;
+    
+    color: #F6F7EB;
 }
 
-#enter:hover {
-    background-color: #3552CF;
-}
-
-.registration_button {
-    padding: 10px;
-    margin-top: 8px;
-    font-size: 20px;
+.login{
+    position: absolute;
+    width: 111px;
+    height: 30px;
+    left: 20px;
+    top: 0px;
+    
     text-decoration: none;
-
-    color: rgb(54, 52, 48);
-
-    display: -webkit-box;
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+    
+    /* identical to box height */
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
-    align-content: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-}
-
-.registration_button:hover {
-    color: black;
+    text-align: center;
+    
+    color: #F6F7EB;
 }
