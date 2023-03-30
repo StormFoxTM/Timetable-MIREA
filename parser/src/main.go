@@ -108,6 +108,7 @@ func download(url string, data Links, queue_download *sync.WaitGroup) error {
 	defer resp.Body.Close()
 
 	if err != nil {
+		log.Println("Ошибка при скачивании файла: " + url)
 		return err
 	}
 	// Определение имени файла
@@ -150,6 +151,9 @@ func download(url string, data Links, queue_download *sync.WaitGroup) error {
 
 // установление соединения с сайтом и получение HTTP-ответа
 func connect(url string, count int) (*http.Response, error) {
+	if count >= 100 {
+		return nil, fmt.Errorf("Не удалось подключиться к сайту")
+	}
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		time.Sleep(1)
