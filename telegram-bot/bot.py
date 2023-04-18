@@ -15,9 +15,7 @@ print("Бот успешно запущен!")
 
 
 def get_timetable(key, value, period):
-    # This is a placeholder function for now
-    # It will call the API for timetable
-
+    # Check for valid time period
     try:
         match period.lower():
             case 'сегодня':
@@ -32,13 +30,18 @@ def get_timetable(key, value, period):
         return "Запрос расписания на несколько дней еще не реализован."
     except ValueError:
         return "Не удалось определить период, на который запрашивается расписание."
+    
+    # Check for valid group / lecturer / auditorium via API request
+    # query = {key: value}
+    # response = requests.get(url, params=query)
+    # ...
 
-    # Query context: 'group' or 'lecture' or 'auditorium', 'week', 'day'
-    # 'week' is '1' for odd, '2' for even, 'day' is '1'-'7' for Mon-Sun
+    # Get timetable via API request
     query = {key: value, 'week': str(week), 'day': str(day)}
     # response = requests.get(url, params=query)
+    # ...
 
-    # return f"<Расписание группы *{group.upper()}* на *{period.lower()}*>"
+    # This response is a placeholder
     return f"К API отправляется get-запрос с параметрами:\n`{str(query)}`"
 
 
@@ -95,7 +98,7 @@ def fetch_timetable(message, key, value):
     period = message.text
     timetable = get_timetable(key, value, period)
     text = ("На данном этапе API еще не развернут, "
-            "поэтому ниже будет выведены действия бота.")
+            "поэтому ниже будут выведены действия бота.")
     markup = tb.types.ReplyKeyboardRemove()
     bot.send_message(message.chat.id, text,
                      parse_mode='Markdown', reply_markup=markup)
@@ -127,11 +130,6 @@ def next_day(week, day):
         day = 1
         week = (week + 1) % 2
     return week, day
-
-
-@bot.message_handler(func=lambda msg: True)
-def echo_all(message):
-    bot.reply_to(message, message.text[::-1])
 
 
 bot.infinity_polling()
