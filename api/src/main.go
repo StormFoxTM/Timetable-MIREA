@@ -218,7 +218,7 @@ func check_group(context *gin.Context) error {
 }
 
 // Проверка преподавателя на присутствие в расписании
-func check_lecture(context *gin.Context) error {
+func check_lecturer(context *gin.Context) error {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
 	_, err := pgsql.GetLecturerID(data["lecturer"][0])
