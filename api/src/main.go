@@ -38,9 +38,9 @@ func getInfo(context *gin.Context) {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
 
-	// Получаем количество параметров "group", "lecture" и "auditorium"
+	// Получаем количество параметров "group", "lecturer" и "auditorium"
 	group := len(data["group"])
-	lecture := len(data["lecture"])
+	lecturer := len(data["lecturer"])
 	auditorium := len(data["auditorium"])
 
 	// В зависимости от того, сколько параметров указано, выбираем соответствующую функцию
@@ -56,9 +56,9 @@ func getInfo(context *gin.Context) {
 			context.String(http.StatusBadRequest, "Группы нет в расписании!")
 		}
 
-	case lecture:
+	case lecturer:
 		// Если не возникло ошибок, возвращаем успех
-		if err := check_lecture(context); err == nil {
+		if err := check_lecturer(context); err == nil {
 			context.String(http.StatusOK, "Преподаватель есть в расписании!")
 		} else if err == errors.New("error connect to db") {
 			context.String(http.StatusBadRequest, "Ошибка в субд")
@@ -89,9 +89,9 @@ func getFunction(context *gin.Context) {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
 
-	// Получаем количество параметров "group", "lecture" и "auditorium"
+	// Получаем количество параметров "group", "lecturer" и "auditorium"
 	group := len(data["group"])
-	lecture := len(data["lecture"])
+	lecturer := len(data["lecturer"])
 	auditorium := len(data["auditorium"])
 
 	// В зависимости от того, сколько параметров указано, выбираем соответствующую функцию
@@ -112,7 +112,7 @@ func getFunction(context *gin.Context) {
 			context.String(http.StatusBadRequest, "Ошибка в запросе!")
 		}
 
-	case lecture:
+	case lecturer:
 		// Получаем данные по лектору и кодируем их в JSON
 		dataLectur, err := get_lecturer(context)
 		dataJSON, err_json := json.Marshal(dataLectur)
@@ -167,7 +167,7 @@ func get_lecturer(context *gin.Context) (pgsql.DataLecturRequests, error) {
 	// Получаем номер текущей недели и дня недели.
 	week_int, day_int := getWeekAndDay(context)
 	// Получаем расписание из базы данных на основе параметров запроса и текущей даты.
-	return pgsql.GetTimetableLectur(strings.Title(data["lecture"][0]), week_int, day_int)
+	return pgsql.GetTimetableLectur(strings.Title(data["lecturer"][0]), week_int, day_int)
 }
 
 // get_auditorium function: получает аудиторию и запрашивает ее расписание из базы данных по заданным дням и неделе.
@@ -221,7 +221,7 @@ func check_group(context *gin.Context) error {
 func check_lecture(context *gin.Context) error {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
-	_, err := pgsql.GetLecturerID(data["lecture"][0])
+	_, err := pgsql.GetLecturerID(data["lecturer"][0])
 
 	return err
 }
