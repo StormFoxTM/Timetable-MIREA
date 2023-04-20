@@ -15,31 +15,36 @@ print("Бот успешно запущен!")
 
 
 def get_timetable(key, value, period):
+    # Check for valid group / lecturer / auditorium via API request
+    query = {key: value}
+    response = requests.get('http://mirea-club.site/api/info', params=query)
+    # TODO: parse response
+    
     # Check for valid time period
     try:
         match period.lower():
             case 'сегодня':
                 week, day = get_today()
+                query = {key: value, 'week': week, 'day': day}
             case 'завтра':
                 week, day = next_day(*get_today())
-            case 'неделя', 'след. неделя':
-                raise NotImplementedError
+                query = {key: value, 'week': week, 'day': day}
+            case 'неделя':
+                week, _ = get_today()
+                query = {key: value, 'week': week}
+            case 'след. неделя':
+                week, _ = next_week(*get_today())
+                query = {key: value, 'week': week}
             case _:
                 raise ValueError
-    except NotImplementedError:
-        return "Запрос расписания на несколько дней еще не реализован."
     except ValueError:
         return "Не удалось определить период, на который запрашивается расписание."
+    except not ValueError:
+        return "Что-то пошло не так."
     
-    # Check for valid group / lecturer / auditorium via API request
-    # query = {key: value}
-    # response = requests.get(url, params=query)
-    # ...
-
     # Get timetable via API request
-    query = {key: value, 'week': str(week), 'day': str(day)}
-    # response = requests.get(url, params=query)
-    # ...
+    response = requests.get('http://mirea-club.site/api/timetable', params=query)
+    # TODO: parse response
 
     # This response is a placeholder
     return f"К API отправляется get-запрос с параметрами:\n`{str(query)}`"
@@ -126,9 +131,14 @@ def get_today():
 
 def next_day(week, day):
     day += 1
-    if day == 7:
-        day = 1
-        week = (week + 1) % 2
+    if day > 7:
+        day -= 7
+        week = week % 2 + 1
+    return week, day
+
+
+def next_week(week, day):
+    week = week % 2 + 1
     return week, day
 
 
