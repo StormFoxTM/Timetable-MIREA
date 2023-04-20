@@ -48,39 +48,42 @@ func getInfo(context *gin.Context) {
 	case group:
 		// Если не возникло ошибок, возвращаем успех
 		if err := check_group(context); err == nil {
-			context.String(http.StatusOK, "Группа есть в расписании!")
+			context.String(http.StatusOK, "Success")
 		} else if err == errors.New("error connect to db") {
-			context.String(http.StatusBadRequest, "Ошибка в субд")
+			context.String(http.StatusBadRequest, "DBMS error")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку"
-			context.String(http.StatusBadRequest, "Группы нет в расписании!")
+			context.String(http.StatusBadRequest, "Failure!")
 		}
+		return
 
 	case lecturer:
 		// Если не возникло ошибок, возвращаем успех
 		if err := check_lecturer(context); err == nil {
-			context.String(http.StatusOK, "Преподаватель есть в расписании!")
+			context.String(http.StatusOK, "Success")
 		} else if err == errors.New("error connect to db") {
-			context.String(http.StatusBadRequest, "Ошибка в субд")
+			context.String(http.StatusBadRequest, "DBMS error")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку"
-			context.String(http.StatusBadRequest, "Преподавателя нет в расписании!")
+			context.String(http.StatusBadRequest, "Failure")
 		}
+		return
 
 	case auditorium:
 		// Если не возникло ошибок, возвращаем успех
 		if err := check_auditorium(context); err == nil {
-			context.String(http.StatusOK, "Аудитория есть в раписании!")
+			context.String(http.StatusOK, "Success")
 		} else if err == errors.New("error connect to db") {
-			context.String(http.StatusBadRequest, "Ошибка в субд")
+			context.String(http.StatusBadRequest, "DBMS error")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку"
-			context.String(http.StatusBadRequest, "Аудитории нет в расписании!")
+			context.String(http.StatusBadRequest, "Failure")
 		}
+		return
 
 	// Если количество параметров не соответствует ни одному из вариантов, возвращаем ошибку "Ошибка в запросе!"
 	default:
-		context.String(http.StatusBadRequest, "Ошибка в запросе!")
+		context.String(http.StatusBadRequest, "Request error")
 	}
 }
 
@@ -106,10 +109,10 @@ func getFunction(context *gin.Context) {
 			context.String(http.StatusOK, string(dataGroupJSON))
 		} else if err == pgx.ErrNoRows {
 			// Если нет данных, возвращаем ошибку "По запросу ничего не найдено"
-			context.String(http.StatusBadRequest, "По запросу ничего не найдено")
+			context.String(http.StatusBadRequest, "Nothing was found on the request")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку "Ошибка в запросе!"
-			context.String(http.StatusBadRequest, "Ошибка в запросе!")
+			context.String(http.StatusBadRequest, "Request error")
 		}
 
 	case lecturer:
@@ -122,10 +125,10 @@ func getFunction(context *gin.Context) {
 			context.String(http.StatusOK, string(dataJSON))
 		} else if err == pgx.ErrNoRows {
 			// Если нет данных, возвращаем ошибку "По запросу ничего не найдено"
-			context.String(http.StatusBadRequest, "По запросу ничего не найдено")
+			context.String(http.StatusBadRequest, "Nothing was found on the request")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку "Ошибка в запросе!"
-			context.String(http.StatusBadRequest, "Ошибка в запросе!")
+			context.String(http.StatusBadRequest, "Request error")
 		}
 
 	case auditorium:
@@ -138,15 +141,15 @@ func getFunction(context *gin.Context) {
 			context.String(http.StatusOK, string(dataJSON))
 		} else if err == pgx.ErrNoRows {
 			// Если нет данных, возвращаем ошибку "По запросу ничего не найдено"
-			context.String(http.StatusBadRequest, "По запросу ничего не найдено")
+			context.String(http.StatusBadRequest, "Nothing was found on the request")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку "Ошибка в запросе!"
-			context.String(http.StatusBadRequest, "Ошибка в запросе!")
+			context.String(http.StatusBadRequest, "Request error")
 		}
 
 	// Если количество параметров не соответствует ни одному из вариантов, возвращаем ошибку "Ошибка в запросе!"
 	default:
-		context.String(http.StatusBadRequest, "Ошибка в запросе!")
+		context.String(http.StatusBadRequest, "Request error")
 	}
 }
 
