@@ -358,7 +358,7 @@ func GetLecturerID(lecturer_name string) (int, error) {
 	if err == nil {
 		defer db.Close()
 		// Выполнение запроса на выборку идентификатора преподавателя из БД
-		err = db.QueryRow(context.Background(), "SELECT id_lecturer FROM lecturer WHERE full_name=$1;", lecturer_name).Scan(&id_lecturer)
+		err = db.QueryRow(context.Background(), "SELECT id_lecturer FROM lecturer WHERE full_name LIKE '"+lecturer_name+" %';").Scan(&id_lecturer)
 		if err == nil {
 			return id_lecturer, nil
 		}
