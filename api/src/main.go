@@ -215,7 +215,7 @@ func getWeekAndDay(context *gin.Context) (int, int) {
 func check_group(context *gin.Context) error {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
-	_, err := pgsql.GetGroupID(data["group"][0])
+	_, err := pgsql.GetGroupID(strings.TrimSpace(strings.ToUpper(data["group"][0])))
 
 	return err
 }
@@ -224,7 +224,7 @@ func check_group(context *gin.Context) error {
 func check_lecturer(context *gin.Context) error {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
-	_, err := pgsql.GetLecturerID(data["lecturer"][0])
+	_, err := pgsql.GetLecturerID(strings.TrimSpace(strings.Title(data["lecturer"][0])))
 
 	return err
 }
@@ -233,7 +233,7 @@ func check_lecturer(context *gin.Context) error {
 func check_auditorium(context *gin.Context) error {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
-	err := pgsql.CheckAuditorium(data["auditorium"][0])
+	err := pgsql.CheckAuditorium(strings.TrimSpace(strings.ToUpper(data["auditorium"][0])))
 
 	return err
 }
