@@ -73,7 +73,7 @@ type DataForWeekGroup struct {
 type DataForDayGroup struct {
 	Subject_to_number int    `json:"subject_to_number"`
 	Subject_title     string `json:"subject_title"`
-	Name_lectur       string `json:"name_lectur"`
+	Name_lecturer       string `json:"name_lecturer"`
 	Auditorium        string `json:"auditorium"`
 }
 
@@ -110,7 +110,7 @@ type DataForDayAuditorium struct {
 	Subject_to_number int    `json:"subject_to_number"`
 	Name_group        string `json:"name_group"`
 	Subject_title     string `json:"subject_title"`
-	Name_lectur       string `json:"name_lectur"`
+	Name_lecturer       string `json:"name_lecturer"`
 }
 
 // Функция подключения к БД PostgreSQL
@@ -173,7 +173,7 @@ func GetTimetableGroup(group string, type_week int, day_week int) (DataGroupRequ
 						dataForDay.Auditorium = strings.TrimSpace(TimeTable.auditorium)
 						dataForDay.Subject_title = strings.TrimSpace(TimeTable.subject_title)
 						dataForDay.Subject_to_number = TimeTable.subject_to_number
-						dataForDay.Name_lectur, _ = GetLecturerName(TimeTable.id_lectur)
+						dataForDay.Name_lecturer, _ = GetLecturerName(TimeTable.id_lectur)
 						dataForWeek.Day = append(dataForWeek.Day, dataForDay)
 					}
 					count += 1
@@ -302,7 +302,7 @@ func GetTimetableAuditorium(auditorium string, type_week int, day_week int) (Dat
 						dataForDay.Name_group, _ = GetGroupName(TimeTable.id_to_group)
 						dataForDay.Subject_title = strings.TrimSpace(TimeTable.subject_title)
 						dataForDay.Subject_to_number = TimeTable.subject_to_number
-						dataForDay.Name_lectur, _ = GetLecturerName(TimeTable.id_lectur)
+						dataForDay.Name_lecturer, _ = GetLecturerName(TimeTable.id_lectur)
 						dataForWeek.Day = append(dataForWeek.Day, dataForDay)
 					}
 					count += 1
