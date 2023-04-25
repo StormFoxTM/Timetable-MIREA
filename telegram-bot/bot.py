@@ -1,16 +1,16 @@
 import os
 from datetime import date
+from pprint import pprint
 
 import requests
 import telebot as tb
 from dotenv import load_dotenv
+from tabulate import tabulate
 
+# Loading bot token
 load_dotenv()
-
 BOT_TOKEN = os.getenv('BOT_TOKEN')
-
 bot = tb.TeleBot(BOT_TOKEN)
-
 print("Бот успешно запущен!")
 
 
@@ -18,9 +18,13 @@ def get_timetable(key, value, period):
     # Check for valid group / lecturer / auditorium via API request
     query = {key: value}
     response = requests.get('http://mirea-club.site/api/info', params=query)
-    # TODO: parse response
-    
+    if response.status_code != 200:
+        tkey = {'group': 'группу', 'lecturer': 'преподавателя',
+                'auditorium': 'аудиторию'}.get(key)
+        return f"Не удалось найти {tkey} в расписании."
+
     # Check for valid time period
+    week, day = None, None
     try:
         match period.lower():
             case 'сегодня':
@@ -41,13 +45,48 @@ def get_timetable(key, value, period):
         return "Не удалось определить период, на который запрашивается расписание."
     except not ValueError:
         return "Что-то пошло не так."
-    
-    # Get timetable via API request
-    response = requests.get('http://mirea-club.site/api/timetable', params=query)
-    # TODO: parse response
 
-    # This response is a placeholder
-    return f"К API отправляется get-запрос с параметрами:\n`{str(query)}`"
+    # Get timetable via API request
+    response = requests.get(
+        'http://mirea-club.site/api/timetable', params=query)
+    
+    # Parse response into tables, form messages
+    messages = parse_response(response, key)
+    daynames = ['Понедельник', 'Вторник', 'Среда',
+                'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+    if day is None:
+        day = 1
+    tmsgs = []
+    for msg in messages:
+        if msg:
+            title = daynames[day - 1]
+            tmsgs.append(f"**{title}:** \n```\n{msg}\n```")
+        day += 1
+    return tmsgs
+
+
+def parse_response(response, mode):
+    tables = []
+    
+    # Filter table headers and json keys needed for parse mode
+    headers = ['Пара', 'Предмет', 'Группа', 'Преподаватель', 'Аудитория']
+    keys = ['subject_to_number', 'subject_title',
+            'name_group', 'name_lecturer', 'auditorium']
+    index = {'group': 2, 'lecturer': 3, 'auditorium': 4}.get(mode)
+    del headers[index]
+    del keys[index]
+
+    # Parse json
+    for day in response.json()['weeks']:
+        table = []
+        if day['day'] is None:
+            tables.append(None)
+        for subject in day['day']:
+            table.append([subject[key] for key in keys])
+            
+        # Format parsed data into tables
+        tables.append(tabulate(table, headers=headers, tablefmt="github"))
+    return tables
 
 
 @bot.message_handler(commands=['start', 'help'])
@@ -102,12 +141,16 @@ def period_handler(message, key):
 def fetch_timetable(message, key, value):
     period = message.text
     timetable = get_timetable(key, value, period)
-    text = ("На данном этапе API еще не развернут, "
-            "поэтому ниже будут выведены действия бота.")
+    tkey = {'group': 'группы', 'lecturer': 'преподавателя',
+            'auditorium': 'аудитории'}.get(key)
+    text = f"Ниже приведено расписание {tkey} {value} на запрошенный период."
     markup = tb.types.ReplyKeyboardRemove()
     bot.send_message(message.chat.id, text,
                      parse_mode='Markdown', reply_markup=markup)
-    bot.send_message(message.chat.id, timetable, parse_mode='Markdown')
+    if type(timetable) == str:
+        timetable = [timetable, ]
+    for tmsg in timetable:
+        bot.send_message(message.chat.id, tmsg, parse_mode='Markdown')
 
 
 def get_today():
