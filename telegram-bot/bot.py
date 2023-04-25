@@ -1,6 +1,5 @@
 import os
 from datetime import date
-from pprint import pprint
 
 import requests
 import telebot as tb
@@ -14,7 +13,7 @@ bot = tb.TeleBot(BOT_TOKEN)
 print("Бот успешно запущен!")
 
 
-def get_timetable(key, value, period):
+def get_timetable(key, value, period, view='table'):
     # Check for valid group / lecturer / auditorium via API request
     query = {key: value}
     response = requests.get('http://mirea-club.site/api/info', params=query)
@@ -51,7 +50,7 @@ def get_timetable(key, value, period):
         'http://mirea-club.site/api/timetable', params=query)
     
     # Parse response into tables, form messages
-    messages = parse_response(response, key)
+    messages = parse_response(response, key, view=view)
     daynames = ['Понедельник', 'Вторник', 'Среда',
                 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
     if day is None:
@@ -60,12 +59,15 @@ def get_timetable(key, value, period):
     for msg in messages:
         if msg:
             title = daynames[day - 1]
-            tmsgs.append(f"**{title}:** \n```\n{msg}\n```")
+            if view == 'table':
+                tmsgs.append(f"**{title}:**\n```\n{msg}\n```")
+            elif view == 'list':
+                tmsgs.append(f"**{title}:**\n{msg}")
         day += 1
     return tmsgs
 
 
-def parse_response(response, mode):
+def parse_response(response, mode, view='table'):
     tables = []
     
     # Filter table headers and json keys needed for parse mode
@@ -84,8 +86,11 @@ def parse_response(response, mode):
         for subject in day['day']:
             table.append([subject[key] for key in keys])
             
-        # Format parsed data into tables
-        tables.append(tabulate(table, headers=headers, tablefmt="github"))
+        # Format parsed data into tables or list
+        if view == 'table':
+            tables.append(tabulate(table, headers=headers, tablefmt="github"))
+        elif view == 'list':
+            tables.append('\n'.join([' - '.join([str(x) for x in row]) for row in table]))
     return tables
 
 
@@ -140,7 +145,7 @@ def period_handler(message, key):
 
 def fetch_timetable(message, key, value):
     period = message.text
-    timetable = get_timetable(key, value, period)
+    timetable = get_timetable(key, value, period, view='list')
     tkey = {'group': 'группы', 'lecturer': 'преподавателя',
             'auditorium': 'аудитории'}.get(key)
     text = f"Ниже приведено расписание {tkey} {value} на запрошенный период."
