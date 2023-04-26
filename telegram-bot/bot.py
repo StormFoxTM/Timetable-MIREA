@@ -1,108 +1,29 @@
 import os
-from datetime import date
 
-import requests
 import telebot as tb
 from dotenv import load_dotenv
-from tabulate import tabulate
+from tools import *
 
-# Loading bot token
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = tb.TeleBot(BOT_TOKEN)
-print("Бот успешно запущен!")
-
-
-def get_timetable(key, value, period, view='table'):
-    # Check for valid group / lecturer / auditorium via API request
-    query = {key: value}
-    response = requests.get('http://mirea-club.site/api/info', params=query)
-    if response.status_code != 200:
-        tkey = {'group': 'группу', 'lecturer': 'преподавателя',
-                'auditorium': 'аудиторию'}.get(key)
-        return f"Не удалось найти {tkey} в расписании."
-
-    # Check for valid time period
-    week, day = None, None
-    try:
-        match period.lower():
-            case 'сегодня':
-                week, day = get_today()
-                query = {key: value, 'week': week, 'day': day}
-            case 'завтра':
-                week, day = next_day(*get_today())
-                query = {key: value, 'week': week, 'day': day}
-            case 'неделя':
-                week, _ = get_today()
-                query = {key: value, 'week': week}
-            case 'след. неделя':
-                week, _ = next_week(*get_today())
-                query = {key: value, 'week': week}
-            case _:
-                raise ValueError
-    except ValueError:
-        return "Не удалось определить период, на который запрашивается расписание."
-    except not ValueError:
-        return "Что-то пошло не так."
-
-    # Get timetable via API request
-    response = requests.get(
-        'http://mirea-club.site/api/timetable', params=query)
-    
-    # Parse response into tables, form messages
-    messages = parse_response(response, key, view=view)
-    daynames = ['Понедельник', 'Вторник', 'Среда',
-                'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
-    if day is None:
-        day = 1
-    tmsgs = []
-    for msg in messages:
-        if msg:
-            title = daynames[day - 1]
-            if view == 'table':
-                tmsgs.append(f"**{title}:**\n```\n{msg}\n```")
-            elif view == 'list':
-                tmsgs.append(f"**{title}:**\n{msg}")
-        day += 1
-    return tmsgs
-
-
-def parse_response(response, mode, view='table'):
-    tables = []
-    
-    # Filter table headers and json keys needed for parse mode
-    headers = ['Пара', 'Предмет', 'Группа', 'Преподаватель', 'Аудитория']
-    keys = ['subject_to_number', 'subject_title',
-            'name_group', 'name_lecturer', 'auditorium']
-    index = {'group': 2, 'lecturer': 3, 'auditorium': 4}.get(mode)
-    del headers[index]
-    del keys[index]
-
-    # Parse json
-    for day in response.json()['weeks']:
-        table = []
-        if day['day'] is None:
-            tables.append(None)
-        for subject in day['day']:
-            table.append([subject[key] for key in keys])
-            
-        # Format parsed data into tables or list
-        if view == 'table':
-            tables.append(tabulate(table, headers=headers, tablefmt="github"))
-        elif view == 'list':
-            tables.append('\n'.join([' - '.join([str(x) for x in row]) for row in table]))
-    return tables
 
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     text = """\
 Привет! Я бот, присылающий расписание МИРЭА.
+
 Список команд:
 - `/start`, `/help`: выводят это сообщение
 - `/timetable`, `/group`: присылает расписание группы
 - `/lecturer`: присылает расписание преподавателя
 - `/auditorium`: присылает расписание по аудитории
+
+Также можно запросить расписание одним сообщением, например:
+- "Расписание ИКБО-02-20" (период по умолчанию - сегодня)
+- "Пары А-10 завтра"
+- "Расписание Волков след. неделя"
 """
     bot.send_message(message.chat.id, text, parse_mode='Markdown')
 
@@ -131,6 +52,26 @@ def auditorium_handler(message):
     bot.register_next_step_handler(sent_msg, period_handler, key)
 
 
+@bot.message_handler(func=lambda msg: True)
+def text_handler(message):
+    params = parse_msg(message.text)
+    print(params)
+    if params is None:
+        text = "Не удалось определить запрос."
+        bot.reply_to(message, text)
+        return
+    key, value, period = params
+    timetable = get_timetable(key, value, period, view='list')
+    tkey = {'group': 'группы', 'lecturer': 'преподавателя', 'auditorium': 'аудитории'}.get(key)
+    tperiod = ((period[:-1] + 'ю') if period[-2:] == 'ля' else period).lower()
+    text = f"Ниже приведено расписание {tkey} {value.title()} на {tperiod}."
+    bot.send_message(message.chat.id, text, parse_mode='Markdown')
+    if type(timetable) == str:
+        timetable = [timetable, ]
+    for tmsg in timetable:
+        bot.send_message(message.chat.id, tmsg, parse_mode='Markdown')
+
+
 def period_handler(message, key):
     value = message.text
     text = "Выберите, расписание на какой период вы хотите получить."
@@ -138,56 +79,25 @@ def period_handler(message, key):
     periods = ['Сегодня', 'Завтра', 'Неделя', 'След. неделя']
     btns = [tb.types.KeyboardButton(period) for period in periods]
     markup.add(*btns)
-    sent_msg = bot.send_message(
-        message.chat.id, text, parse_mode='Markdown', reply_markup=markup)
+    sent_msg = bot.send_message(message.chat.id, text, parse_mode='Markdown', reply_markup=markup)
     bot.register_next_step_handler(sent_msg, fetch_timetable, key, value)
 
 
 def fetch_timetable(message, key, value):
     period = message.text
+    value = parse_wrapper(value, mode=key)
     timetable = get_timetable(key, value, period, view='list')
-    tkey = {'group': 'группы', 'lecturer': 'преподавателя',
-            'auditorium': 'аудитории'}.get(key)
-    text = f"Ниже приведено расписание {tkey} {value} на запрошенный период."
+    tkey = {'group': 'группы', 'lecturer': 'преподавателя', 'auditorium': 'аудитории'}.get(key)
+    tperiod = ((period[:-1] + 'ю') if period[-2:] == 'ля' else period).lower()
+    text = f"Ниже приведено расписание {tkey} {value.title()} на {tperiod}."
     markup = tb.types.ReplyKeyboardRemove()
-    bot.send_message(message.chat.id, text,
-                     parse_mode='Markdown', reply_markup=markup)
+    bot.send_message(message.chat.id, text, parse_mode='Markdown', reply_markup=markup)
     if type(timetable) == str:
         timetable = [timetable, ]
     for tmsg in timetable:
         bot.send_message(message.chat.id, tmsg, parse_mode='Markdown')
 
 
-def get_today():
-    today = date.today()
-
-    # Set first day of semester to Sep 1 or Feb 9
-    firstday = (9, 1) if today.month >= 9 else (2, 9)
-    firstday = date(today.year, *firstday)
-
-    # Set firstday to Monday of first week
-    if firstday.weekday() == 6:
-        firstday = firstday.replace(day=firstday.day+1)
-    else:
-        firstday = firstday.replace(day=firstday.day-firstday.weekday())
-
-    # Get week parity (1 if odd, 2 if even)
-    weekparity = (((today - firstday).days // 7) % 2) + 1
-
-    return weekparity, today.isoweekday()
-
-
-def next_day(week, day):
-    day += 1
-    if day > 7:
-        day -= 7
-        week = week % 2 + 1
-    return week, day
-
-
-def next_week(week, day):
-    week = week % 2 + 1
-    return week, day
-
-
-bot.infinity_polling()
+if __name__ == '__main__':
+    print("Бот успешно запущен!")
+    bot.infinity_polling()
