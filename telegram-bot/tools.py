@@ -41,10 +41,12 @@ def get_timetable(key, value, period, view='table'):
 
     # Get timetable via API request
     response = requests.get('http://mirea-club.site/api/timetable', params=query)
-    print(response.json())
 
     # Parse response into tables, form messages
-    messages = parse_response(response, key, view=view)
+    try:
+        messages = parse_response(response, key, view=view)
+    except:
+        return "Получен некорректный ответ от сервера."
     daynames = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
     if day is None:
         day = 1
@@ -141,7 +143,7 @@ def parse_wrapper(text, mode=None):
 
 def parse_group(text):
     group = None
-    matches = re.findall(r'([а-я]{4})[ -]?(\d{2})[ -]?(\d{2})', text)
+    matches = re.findall(r'([а-я]{4})[ -]?(\d{2})[ -]?(\d{2})', text.lower())
     if len(matches):
         group = '-'.join(matches[0])
     return group
@@ -149,7 +151,7 @@ def parse_group(text):
 
 def parse_auditorium(text):
     auditorium = None
-    matches = re.findall(r'([а-я]+)[ -]?(\d+)(?:[ -]?([\dа-я]))?', text)
+    matches = re.findall(r'([а-я]+)[ -]?(\d+)(?:[ -]?([\dа-я]))?', text.lower())
     if len(matches):
         auditorium = '-'.join(matches[0])
     return auditorium
@@ -157,7 +159,7 @@ def parse_auditorium(text):
 
 def parse_lecturer(text):
     lecturer = None
-    matches = re.findall(r'([а-я]{3,}) ?([а-я])?[ .]?([а-я])?[ .]?', text)
+    matches = re.findall(r'([а-я]{3,}) ?([а-я])?[ .]?([а-я])?[ .]?', text.lower())
     if len(matches):
         ln, fn, mn = matches[0]
         lecturer = f"{ln}{' ' + fn + '.' if fn else ''}{mn + '.' if mn else ''}"
