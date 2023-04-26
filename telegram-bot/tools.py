@@ -127,7 +127,10 @@ def parse_msg(text):
     text = ' '.join(words)
 
     # Detecting group, auditorium or lecturer
-    key, value = parse_wrapper(text)
+    temp = parse_wrapper(text)
+    if temp is None:
+        return None
+    key, value = temp
     return key, value, period
 
 
