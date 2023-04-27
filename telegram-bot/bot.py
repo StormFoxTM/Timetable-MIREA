@@ -85,11 +85,16 @@ def period_handler(message, key):
 def fetch_timetable(message, key, value):
     period = message.text
     value = parse_wrapper(value, mode=key)
+    markup = tb.types.ReplyKeyboardRemove()
+    if value is None:
+        tkey = {'group': 'группу', 'lecturer': 'преподавателя', 'auditorium': 'аудиторию'}.get(key)
+        text = f"Не удалось распознать {tkey}."
+        bot.send_message(message.chat.id, text, parse_mode='Markdown', reply_markup=markup)
+        return
     timetable = get_timetable(key, value, period, view='list')
     tkey = {'group': 'группы', 'lecturer': 'преподавателя', 'auditorium': 'аудитории'}.get(key)
     tperiod = ((period[:-1] + 'ю') if period[-2:] == 'ля' else period).lower()
     text = f"Ниже приведено расписание {tkey} {value.title()} на {tperiod}."
-    markup = tb.types.ReplyKeyboardRemove()
     bot.send_message(message.chat.id, text, parse_mode='Markdown', reply_markup=markup)
     if type(timetable) == str:
         timetable = [timetable, ]
