@@ -156,7 +156,7 @@ def parse_auditorium(text):
     auditorium = None
     matches = re.findall(r'([а-я]+)[ -]?(\d+)(?:[ -]?([\dа-я]))?', text.lower())
     if len(matches):
-        auditorium = '-'.join(matches[0])
+        auditorium = '-'.join([x for x in matches[0] if x])
     return auditorium
 
 

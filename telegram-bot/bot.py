@@ -55,7 +55,6 @@ def auditorium_handler(message):
 @bot.message_handler(func=lambda msg: True)
 def text_handler(message):
     params = parse_msg(message.text)
-    print(params)
     if params is None:
         text = "Не удалось определить запрос."
         bot.reply_to(message, text)
