@@ -1,5 +1,5 @@
 package pgsql
-""" Модуль для работы с СУБД в API"""
+/// Модуль для работы с СУБД в API ///
 
 import (
 	"context"
@@ -114,7 +114,7 @@ type DataForDayAuditorium struct {
 	Name_lecturer     string `json:"name_lecturer"`
 }
 
-""" connectToDB - функция подключения к БД PostgreSQL """
+/// connectToDB - функция подключения к БД PostgreSQL ///
 func connectToDB() (*pgxpool.Pool, error) {
 	// Строка подключения к БД
 	urlDB := "postgres://api:api@postgres:5432/TimeTableDB"
@@ -126,9 +126,9 @@ func connectToDB() (*pgxpool.Pool, error) {
 	return db, nil
 }
 
-""" Функция GetTimetableGroup возвращает расписание занятий для группы по названию group на указанный тип недели и день недели.
+/// Функция GetTimetableGroup возвращает расписание занятий для группы по названию group на указанный тип недели и день недели.
 type_week - тип недели (1 - нечётная, 2 - чётная, 0 - все недели)
-day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) """
+day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) ///
 func GetTimetableGroup(group string, type_week int, day_week int) (DataGroupRequests, error) {
 	var dataGroupRequests DataGroupRequests
 	// Подключение к БД
@@ -190,9 +190,9 @@ func GetTimetableGroup(group string, type_week int, day_week int) (DataGroupRequ
 	return dataGroupRequests, err
 }
 
-""" Функция GetTimetableLectur возвращает расписание занятий для преподавателя по имени lecturer на указанный тип недели и день недели.
+/// Функция GetTimetableLectur возвращает расписание занятий для преподавателя по имени lecturer на указанный тип недели и день недели.
 type_week - тип недели (1 - нечётная, 2 - чётная, 0 - все недели)
-day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) """
+day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) ///
 func GetTimetableLectur(lecturer string, type_week int, day_week int) (DataLecturRequests, error) {
 	var dataRequests DataLecturRequests
 	// Подключение к БД
@@ -257,9 +257,9 @@ func GetTimetableLectur(lecturer string, type_week int, day_week int) (DataLectu
 	return dataRequests, err
 }
 
-""" Функция GetTimetableAuditorium возвращает расписание занятий для преподавателя по названию auditorium на указанный тип недели и день недели.
+/// Функция GetTimetableAuditorium возвращает расписание занятий для преподавателя по названию auditorium на указанный тип недели и день недели.
 type_week - тип недели (1 - нечётная, 2 - чётная, 0 - все недели)
-day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) """
+day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) ///
 func GetTimetableAuditorium(auditorium string, type_week int, day_week int) (DataAuditoriumRequests, error) {
 	var dataRequests DataAuditoriumRequests
 	// Подключение к БД
@@ -319,7 +319,7 @@ func GetTimetableAuditorium(auditorium string, type_week int, day_week int) (Dat
 	return dataRequests, err
 }
 
-""" GetLecturerName - функция получения имени преподавателя по его идентификатору """
+/// GetLecturerName - функция получения имени преподавателя по его идентификатору ///
 func GetLecturerName(lecturer_id int) (string, error) {
 	// Открытие соединения с БД
 	var lecturer_name string
@@ -335,7 +335,7 @@ func GetLecturerName(lecturer_id int) (string, error) {
 	return "", err
 }
 
-""" GetGroupName - функция получения названия группы по ее идентификатору """
+/// GetGroupName - функция получения названия группы по ее идентификатору ///
 func GetGroupName(group_id int) (string, error) {
 	// Открытие соединения с БД
 	var group_name string
@@ -351,7 +351,7 @@ func GetGroupName(group_id int) (string, error) {
 	return "", err
 }
 
-""" GetLecturerID - функция получения идентификатора преподавателя по его имени """
+/// GetLecturerID - функция получения идентификатора преподавателя по его имени ///
 func GetLecturerID(lecturer_name string) (int, error) {
 	// Открытие соединения с БД
 	var id_lecturer int
@@ -368,7 +368,7 @@ func GetLecturerID(lecturer_name string) (int, error) {
 	return 0, errors.New("error connect to db")
 }
 
-""" GetGroupID - функция получения идентификатора группы по ее названию """
+/// GetGroupID - функция получения идентификатора группы по ее названию ///
 func GetGroupID(group string) (int, error) {
 	// Открытие соединения с БД
 	db, err := connectToDB()
@@ -385,7 +385,7 @@ func GetGroupID(group string) (int, error) {
 	return 0, errors.New("error connect to db")
 }
 
-""" CheckAuditorium - функция проверки аудитории на наличие в расписании """
+/// CheckAuditorium - функция проверки аудитории на наличие в расписании ///
 func CheckAuditorium(auditorium string) error {
 	// Открытие соединения с БД
 	db, err := connectToDB()
@@ -399,7 +399,7 @@ func CheckAuditorium(auditorium string) error {
 	return errors.New("error connect to db")
 }
 
-""" GetInstituteID - функция получения идентификатора института по его названию """
+/// GetInstituteID - функция получения идентификатора института по его названию ///
 func GetInstituteID(instituteName string) (int, error) {
 	// Открытие соединения с БД
 	db, err := connectToDB()
@@ -416,7 +416,7 @@ func GetInstituteID(instituteName string) (int, error) {
 	return 0, err
 }
 
-""" find_letter - функция получает название группы и вырезает из неё 3 символ """
+/// find_letter - функция получает название группы и вырезает из неё 3 символ ///
 func find_letter(group string) int {
 	var letter rune
 	for i, elem := range group {
@@ -428,7 +428,7 @@ func find_letter(group string) int {
 	return find_id_degree(string(letter))
 }
 
-""" find_id_degree - функция получает 3 символ группы, который определяет степень обучения """
+/// find_id_degree - функция получает 3 символ группы, который определяет степень обучения ///
 func find_id_degree(letter string) int {
 	switch letter {
 	case "Б":

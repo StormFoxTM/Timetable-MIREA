@@ -1,5 +1,5 @@
 package xls
-""" Модуль для преобразования файлов из xls в xlsx """
+/// Модуль для преобразования файлов из xls в xlsx ///
 
 import (
 	"log"
@@ -11,7 +11,7 @@ import (
 
 var cell *xlsx.Cell // объявление переменной типа excel ячейки
 
-""" функция Convert для преобразования xls файла в xlsx """
+/// функция Convert для преобразования xls файла в xlsx ///
 func Convert(file string) error {
 	pwd, err := os.Getwd()
 	if err != nil {

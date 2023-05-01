@@ -1,5 +1,5 @@
 package main
-""" Основной модуль в парсере """
+/// Основной модуль в парсере ///
 
 // Импортируем необходимые модули и библиотеки
 import (
@@ -37,7 +37,7 @@ var (
 	dsn = "api:api@tcp(timetable.postgres:5432)/TimeTableDB?charset=utf8mb4&parseTime=True&loc=Local"
 )
 
-""" Функция main - основная функция """
+/// Функция main - основная функция ///
 func main() {
 	log.Println("Парсер успешно запущен!")
 	// Запуск функции для проверки здоровья контейнера
@@ -55,7 +55,7 @@ func main() {
 	}
 }
 
-""" healthcheack - функция для проверки здоровья контейнера """
+/// healthcheack - функция для проверки здоровья контейнера ///
 func healthcheack() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, World!")
@@ -64,7 +64,7 @@ func healthcheack() {
 	log.Fatal(http.ListenAndServe(":9009", nil))
 }
 
-""" start_script - функция для обновления данных """
+/// start_script - функция для обновления данных ///
 func start_script() {
 	// Вывод в лог сообщения о начале парсинга
 	log.Println("Запущен процесс обновления расписания")
@@ -80,7 +80,7 @@ func start_script() {
 	log.Println("End parsing")
 }
 
-""" check_directory - функция удаления каталога 'temp' и его содержимого, а также создания каталога 'last' """
+/// check_directory - функция удаления каталога 'temp' и его содержимого, а также создания каталога 'last' ///
 func check_directory() {
 	os.RemoveAll("temp")
 	os.Mkdir("temp", 0777)
@@ -89,7 +89,7 @@ func check_directory() {
 	}
 }
 
-""" loader - функция загрузки файлов в базу данных """
+/// loader - функция загрузки файлов в базу данных ///
 func loader() error {
 	log.Println("Start loader")
 	var queue_download sync.WaitGroup
@@ -101,7 +101,7 @@ func loader() error {
 	return nil
 }
 
-""" download - функция загрузки файла по ссылке """
+/// download - функция загрузки файла по ссылке ///
 func download(url string, data Links, queue_download *sync.WaitGroup) error {
 	// Уменьшение счетчика ожидания на 1 при завершении работы функции
 	defer queue_download.Done()
@@ -151,7 +151,7 @@ func download(url string, data Links, queue_download *sync.WaitGroup) error {
 	return nil
 }
 
-""" connect - функция для установления соединения с сайтом и получение HTTP-ответа """
+/// connect - функция для установления соединения с сайтом и получение HTTP-ответа ///
 func connect(url string, count int) (*http.Response, error) {
 	if count >= 100 {
 		return nil, fmt.Errorf("Не удалось подключиться к сайту")
@@ -164,7 +164,7 @@ func connect(url string, count int) (*http.Response, error) {
 	return resp, err
 }
 
-""" parse_site - функция для парсинга сайта """
+/// parse_site - функция для парсинга сайта ///
 func parse_site() error {
 	log.Println("Парсинг сайта")
 	resp, err := connect(siteURL, 0) // получаем GET запрос
@@ -203,7 +203,7 @@ func parse_site() error {
 	}
 }
 
-""" file_comparison - функция для сравнения файлов """
+/// file_comparison - функция для сравнения файлов ///
 func file_comparison(file string) bool {
 	// открываем файлы
 	new_file, err := os.Open("temp\\" + file)
@@ -220,7 +220,7 @@ func file_comparison(file string) bool {
 	return find_sum(new_file) == find_sum(last_file)
 }
 
-""" find_sum - функция для нахождения суммы md5 """
+/// find_sum - функция для нахождения суммы md5 ///
 func find_sum(file *os.File) string {
 	file.Seek(0, 0) // Сброс курсора к началу файла
 	sum, err := getMD5SumString(file)
@@ -230,7 +230,7 @@ func find_sum(file *os.File) string {
 	return sum
 }
 
-""" getMD5SumString - функция для получения md5-хеша """
+/// getMD5SumString - функция для получения md5-хеша ///
 func getMD5SumString(f *os.File) (string, error) {
 	fileSum := md5.New()
 	_, err := io.Copy(fileSum, f)
@@ -240,7 +240,7 @@ func getMD5SumString(f *os.File) (string, error) {
 	return fmt.Sprintf("%X", fileSum.Sum(nil)), nil
 }
 
-""" read_file - функция для чтения файла xlsx """
+/// read_file - функция для чтения файла xlsx ///
 func read_file(file string, data Links) error {
 	xlsxFile, err := excelize.OpenFile("temp\\" + file) // открываем файл
 	if err != nil {
@@ -257,7 +257,7 @@ func read_file(file string, data Links) error {
 	return nil
 }
 
-""" read_list - функция для чтения данных из списка """
+/// read_list - функция для чтения данных из списка ///
 func read_list(xlsxFile *excelize.File, sheetName string, data Links) {
 	find_group := false                                        // флаг, указывающий на то, была ли найдена группа
 	rowIndex := 2                                              // начальная строка для поиска
@@ -300,7 +300,7 @@ func read_list(xlsxFile *excelize.File, sheetName string, data Links) {
 	}
 }
 
-""" read_data - функция которая считывает данные из excel и отправляет их в СУБД """
+/// read_data - функция которая считывает данные из excel и отправляет их в СУБД ///
 func read_data(xlsxFile *excelize.File, sheetName string, columnIndex int, number string, count_day int,
 	group string, elem int, row int, data Links) {
 	subject, _ := xlsxFile.GetCellValue(sheetName, cell_name(columnIndex)+strconv.Itoa(elem))
@@ -311,19 +311,19 @@ func read_data(xlsxFile *excelize.File, sheetName string, columnIndex int, numbe
 		clear_str(lecturer), clear_str(auditorium), clear_str(type_of_subject), data.institute, data.course)
 }
 
-""" clear_str - функция для очистки строки от лишних пробелов """
+/// clear_str - функция для очистки строки от лишних пробелов ///
 func clear_str(str string) string {
 	tmp := strings.TrimSpace(strings.ReplaceAll(str, "\n", " "))
 	return strings.ReplaceAll(tmp, "\t", " ")
 }
 
-""" cell_name - функция, которая считывает строку из ячейки excel """
+/// cell_name - функция, которая считывает строку из ячейки excel ///
 func cell_name(number int) string {
 	name, _ := excelize.ColumnNumberToName(number)
 	return name
 }
 
-""" move_file - функция которая перемещает файл из папки temp в папку last """
+/// move_file - функция которая перемещает файл из папки temp в папку last ///
 func move_file(file string) error {
 	os.Remove("last\\" + file)                 // удаление старой версии файла из папки last
 	inputFile, err := os.Open("temp\\" + file) //чтение данных из файла в папке temp

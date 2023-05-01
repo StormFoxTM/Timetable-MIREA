@@ -1,5 +1,5 @@
 package pgsql
-""" Модуль для работы с СУБД в парсере """
+/// Модуль для работы с СУБД в парсере ///
 
 import (
 	"context"
@@ -61,7 +61,7 @@ type timetable struct {
 	type_of_week      int
 }
 
-""" Функция MainFunc основная функция, которая вызывается для добавления определённых данных в СУБД """
+/// Функция MainFunc основная функция, которая вызывается для добавления определённых данных в СУБД ///
 func MainFunc(group string, day int, type_of_week int, number string,
 	subject string, lecturer string, auditorium string, type_of_subject string, institute string, course string) {
 	urlDB := "postgres://api:api@postgres:5432/TimeTableDB" // адрес СУБД
@@ -75,7 +75,7 @@ func MainFunc(group string, day int, type_of_week int, number string,
 	}
 }
 
-""" Функция addTimetable для добавление расписания в СУБД """
+/// Функция addTimetable для добавление расписания в СУБД ///
 func addTimetable(db *pgx.Conn, group string, day_week int, type_of_week int, subject_to_number string,
 	subject_title string, name_lecturer string, auditorium string, type_of_subject string, institute string, int_course int) {
 	var id_lecturer int
@@ -117,7 +117,7 @@ func addTimetable(db *pgx.Conn, group string, day_week int, type_of_week int, su
 	}
 }
 
-""" Функция addLecturer для добавление преподавателя в СУБД """
+/// Функция addLecturer для добавление преподавателя в СУБД ///
 func addLecturer(db *pgx.Conn, lecturers string) int {
 	if lecturers != "" {
 		var Lecturer lecturer
@@ -138,7 +138,7 @@ func addLecturer(db *pgx.Conn, lecturers string) int {
 	return -1
 }
 
-""" Функция addGroup для добавление группы в СУБД """
+/// Функция addGroup для добавление группы в СУБД ///
 func addGroup(db *pgx.Conn, group string, name_institute string, course int, lastErr error, id_group int) int {
 	var Study_Group study_group
 	var Institute institute
@@ -160,7 +160,7 @@ func addGroup(db *pgx.Conn, group string, name_institute string, course int, las
 	return Study_Group.id_group
 }
 
-""" Функция addInstitute для добавление института в СУБД """
+/// Функция addInstitute для добавление института в СУБД ///
 func addInstitute(db *pgx.Conn, instituteName string) int {
 	var id_of_the_institute int
 	db.QueryRow(context.Background(), "INSERT INTO institute (name_of_the_institute) VALUES ($1) RETURNING id_of_the_institute;",
@@ -168,7 +168,7 @@ func addInstitute(db *pgx.Conn, instituteName string) int {
 	return id_of_the_institute
 }
 
-""" Функция GetInstituteName для получение название института по его ID """
+/// Функция GetInstituteName для получение название института по его ID ///
 func GetInstituteName(db *pgx.Conn, instituteID int) string {
 	var name_of_the_institute string
 	err_institute := db.QueryRow(context.Background(), "SELECT name_of_the_institute FROM institute WHERE id_of_the_institute=$1;",
@@ -179,7 +179,7 @@ func GetInstituteName(db *pgx.Conn, instituteID int) string {
 	return ""
 }
 
-""" Функция find_letter для поиска третий буквы в названии группы """
+/// Функция find_letter для поиска третий буквы в названии группы ///
 func find_letter(group string) int {
 	var letter rune
 	for i, elem := range group {
@@ -191,7 +191,7 @@ func find_letter(group string) int {
 	return find_id_degree(string(letter))
 }
 
-""" Функция find_id_degree для определения степени обучения, которая зашифрована в 3 букве """
+/// Функция find_id_degree для определения степени обучения, которая зашифрована в 3 букве ///
 func find_id_degree(letter string) int {
 	switch letter {
 	case "Б":
