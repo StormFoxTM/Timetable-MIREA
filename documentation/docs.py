@@ -245,11 +245,11 @@ class Docs():
                 status = False
                 for line in lines:
                     line = line.rstrip()
-                    if line.startswith('"""'):
+                    if line.startswith('"""') or line.startswith('///'):
                         status = not status
                     if status is True:
                         comments.append(line.strip())
-                    if len(line) > 3 and line.endswith('"""'):
+                    if len(line) > 3 and (line.endswith('"""') or line.endswith('///')):
                         status = False
                     
                 return comments
