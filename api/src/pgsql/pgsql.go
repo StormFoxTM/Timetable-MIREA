@@ -117,7 +117,7 @@ type DataForDayAuditorium struct {
 /// connectToDB - функция подключения к БД PostgreSQL ///
 func connectToDB() (*pgxpool.Pool, error) {
 	// Строка подключения к БД
-	urlDB := "postgres://api:api@postgres:5432/TimeTableDB"
+	urlDB := "postgres://admin:admin@postgres:5432/TimeTableDB"
 	// Подключение к БД
 	db, err := pgxpool.New(context.Background(), urlDB)
 	if err != nil {
