@@ -126,9 +126,9 @@ func connectToDB() (*pgxpool.Pool, error) {
 	return db, nil
 }
 
-/// Функция GetTimetableGroup возвращает расписание занятий для группы по названию group на указанный тип недели и день недели.
-type_week - тип недели (1 - нечётная, 2 - чётная, 0 - все недели)
-day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) ///
+/// Функция GetTimetableGroup возвращает расписание занятий для группы по названию group на указанный тип недели и день недели. ///
+/// type_week - тип недели (1 - нечётная, 2 - чётная, 0 - все недели) ///
+/// day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) ///
 func GetTimetableGroup(group string, type_week int, day_week int) (DataGroupRequests, error) {
 	var dataGroupRequests DataGroupRequests
 	// Подключение к БД
@@ -190,9 +190,9 @@ func GetTimetableGroup(group string, type_week int, day_week int) (DataGroupRequ
 	return dataGroupRequests, err
 }
 
-/// Функция GetTimetableLectur возвращает расписание занятий для преподавателя по имени lecturer на указанный тип недели и день недели.
-type_week - тип недели (1 - нечётная, 2 - чётная, 0 - все недели)
-day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) ///
+/// Функция GetTimetableLectur возвращает расписание занятий для преподавателя по имени lecturer на указанный тип недели и день недели. ///
+/// type_week - тип недели (1 - нечётная, 2 - чётная, 0 - все недели) ///
+/// day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) ///
 func GetTimetableLectur(lecturer string, type_week int, day_week int) (DataLecturRequests, error) {
 	var dataRequests DataLecturRequests
 	// Подключение к БД
@@ -257,9 +257,9 @@ func GetTimetableLectur(lecturer string, type_week int, day_week int) (DataLectu
 	return dataRequests, err
 }
 
-/// Функция GetTimetableAuditorium возвращает расписание занятий для преподавателя по названию auditorium на указанный тип недели и день недели.
-type_week - тип недели (1 - нечётная, 2 - чётная, 0 - все недели)
-day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) ///
+/// Функция GetTimetableAuditorium возвращает расписание занятий для преподавателя по названию auditorium на указанный тип недели и день недели. ///
+/// type_week - тип недели (1 - нечётная, 2 - чётная, 0 - все недели) ///
+/// day_week - день недели (1 - понедельник, 2 - вторник, ..., 7 - воскресенье, 0 - все дни) ///
 func GetTimetableAuditorium(auditorium string, type_week int, day_week int) (DataAuditoriumRequests, error) {
 	var dataRequests DataAuditoriumRequests
 	// Подключение к БД
