@@ -63,8 +63,8 @@ type timetable struct {
 // основная функция, которая вызывается для добавления определённых данных в СУБД
 func MainFunc(group string, day int, type_of_week int, number string,
 	subject string, lecturer string, auditorium string, type_of_subject string, institute string, course string) {
-	urlDB := "postgres://admin:admin@postgres:5432/TimeTableDB" // адрес СУБД
-	db, err := pgx.Connect(context.Background(), urlDB)         // подключение к СУБД
+	urlDB := "postgres://api:api@postgres:5432/TimeTableDB" // адрес СУБД
+	db, err := pgx.Connect(context.Background(), urlDB)     // подключение к СУБД
 	if err != nil {
 		fmt.Errorf("Error to connect db", err)
 	} else {

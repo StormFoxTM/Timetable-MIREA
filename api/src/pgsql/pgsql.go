@@ -73,7 +73,7 @@ type DataForWeekGroup struct {
 type DataForDayGroup struct {
 	Subject_to_number int    `json:"subject_to_number"`
 	Subject_title     string `json:"subject_title"`
-	Name_lecturer       string `json:"name_lecturer"`
+	Name_lecturer     string `json:"name_lecturer"`
 	Auditorium        string `json:"auditorium"`
 }
 
@@ -110,13 +110,13 @@ type DataForDayAuditorium struct {
 	Subject_to_number int    `json:"subject_to_number"`
 	Name_group        string `json:"name_group"`
 	Subject_title     string `json:"subject_title"`
-	Name_lecturer       string `json:"name_lecturer"`
+	Name_lecturer     string `json:"name_lecturer"`
 }
 
 // Функция подключения к БД PostgreSQL
 func connectToDB() (*pgxpool.Pool, error) {
 	// Строка подключения к БД
-	urlDB := "postgres://admin:admin@postgres:5432/TimeTableDB"
+	urlDB := "postgres://api:api@postgres:5432/TimeTableDB"
 	// Подключение к БД
 	db, err := pgxpool.New(context.Background(), urlDB)
 	if err != nil {
