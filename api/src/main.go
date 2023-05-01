@@ -1,4 +1,5 @@
 package main
+""" Основной модуль в API """
 
 // Импортируем необходимые модули и библиотеки
 import (
@@ -14,7 +15,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// Основная функция main
+""" Основная функция main """
 func main() {
 	// Создаем новый роутер Gin с настройками по умолчанию
 	router := gin.Default()
@@ -33,7 +34,7 @@ func main() {
 	}
 }
 
-// Функция для выдачи информации
+""" getInfo - функция для выдачи информации """
 func getInfo(context *gin.Context) {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
@@ -87,7 +88,7 @@ func getInfo(context *gin.Context) {
 	}
 }
 
-// Функция для выдачи расписания
+""" getFunction - функция для выдачи расписания """
 func getFunction(context *gin.Context) {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
@@ -153,7 +154,7 @@ func getFunction(context *gin.Context) {
 	}
 }
 
-// get_group function: получает группу и запрашивает ее расписание из базы данных по заданным дням и неделе.
+""" get_group function: получает группу и запрашивает ее расписание из базы данных по заданным дням и неделе. """
 func get_group(context *gin.Context) (pgsql.DataGroupRequests, error) {
 	// Получаем параметры запроса из URL.
 	data := context.Request.URL.Query()
@@ -163,7 +164,7 @@ func get_group(context *gin.Context) (pgsql.DataGroupRequests, error) {
 	return pgsql.GetTimetableGroup(strings.ToUpper(data["group"][0]), week_int, day_int)
 }
 
-// get_lecturer function: получает преподавателя и запрашивает его расписание из базы данных по заданным дням и неделе.
+""" get_lecturer function: получает преподавателя и запрашивает его расписание из базы данных по заданным дням и неделе. """
 func get_lecturer(context *gin.Context) (pgsql.DataLecturRequests, error) {
 	// Получаем параметры запроса из URL.
 	data := context.Request.URL.Query()
@@ -173,7 +174,7 @@ func get_lecturer(context *gin.Context) (pgsql.DataLecturRequests, error) {
 	return pgsql.GetTimetableLectur(strings.Title(data["lecturer"][0]), week_int, day_int)
 }
 
-// get_auditorium function: получает аудиторию и запрашивает ее расписание из базы данных по заданным дням и неделе.
+""" get_auditorium function: получает аудиторию и запрашивает ее расписание из базы данных по заданным дням и неделе. """
 func get_auditorium(context *gin.Context) (pgsql.DataAuditoriumRequests, error) {
 	// Получаем параметры запроса из URL.
 	data := context.Request.URL.Query()
@@ -183,7 +184,7 @@ func get_auditorium(context *gin.Context) (pgsql.DataAuditoriumRequests, error) 
 	return pgsql.GetTimetableAuditorium(strings.ToUpper(data["auditorium"][0]), week_int, day_int)
 }
 
-// Функция получает контекст запроса и возвращает номер недели и дня в числовом формате
+""" getWeekAndDay - функция получает контекст запроса и возвращает номер недели и дня в числовом формате """
 func getWeekAndDay(context *gin.Context) (int, int) {
 	// Извлекаем данные из URL-запроса
 	data := context.Request.URL.Query()
@@ -211,7 +212,7 @@ func getWeekAndDay(context *gin.Context) (int, int) {
 	return week_int, day_int
 }
 
-// Проверка группы на наличие в расписании
+""" check_group - функция проверки группы на наличие в расписании """
 func check_group(context *gin.Context) error {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
@@ -220,7 +221,7 @@ func check_group(context *gin.Context) error {
 	return err
 }
 
-// Проверка преподавателя на присутствие в расписании
+""" check_lecturer - функция проверки преподавателя на присутствие в расписании """
 func check_lecturer(context *gin.Context) error {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
@@ -229,7 +230,7 @@ func check_lecturer(context *gin.Context) error {
 	return err
 }
 
-// Проверка аудитории на наличие в расписании
+""" check_auditorium - функция проверки аудитории на наличие в расписании """
 func check_auditorium(context *gin.Context) error {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
