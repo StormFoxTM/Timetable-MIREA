@@ -6,6 +6,15 @@ from tabulate import tabulate
 
 
 def get_timetable(key, value, period, view='table'):
+    """
+    Requests timetable from API and parses the response into messages.
+    
+    :param key: Query key (`'group'`, `'lecturer'` or `'auditorium'`)
+    :param value: Query value (group/lecturer/auditorium name)
+    :param period: String with time period for the timetable requested
+    :param view: `'table'` or `'list'`, determines output format, defaults to `'table'`
+    :return: List of formatted messages each containing a title and timetable for a day
+    """
     # Check for valid group / lecturer / auditorium via API request
     query = {key: value}
     # The if statement below is a temporary fix!
@@ -63,6 +72,14 @@ def get_timetable(key, value, period, view='table'):
 
 
 def parse_response(response, mode, view='table'):
+    """
+    Parses JSON response from API.
+    
+    :param response: Response object to parse
+    :param mode: Query key
+    :param view: `'table'` or `'list'`, determines output format, defaults to `'table'`
+    :return: List of formatted messages each containing a timetable for a day
+    """
     tables = []
 
     # Filter table headers and json keys needed for parse mode
@@ -90,6 +107,13 @@ def parse_response(response, mode, view='table'):
 
 
 def parse_msg(text):
+    """
+    Reads a text message, determines if it is a timetable query.
+    If it is, tries to parse time period and query type.
+    
+    :param text: Message text
+    :return: Query key (`'group'`, `'lecturer'` or `'auditorium'`), query value, time period
+    """
     text = str.lower(text)
     words = text.split()
 
@@ -135,6 +159,13 @@ def parse_msg(text):
 
 
 def parse_wrapper(text, mode=None):
+    """
+    Wrapper for parser functions. Parses query value
+    
+    :param text: Input string
+    :param mode: Query key if parsing for a specific query type, defaults to `None`
+    :return: Query key and value if mode is `None`, else only query value
+    """
     parsers = [(parse_group, 'group'), (parse_auditorium, 'auditorium'), (parse_lecturer, 'lecturer')]
     str_value = None
     for parser, key in parsers:
@@ -145,6 +176,12 @@ def parse_wrapper(text, mode=None):
 
 
 def parse_group(text):
+    """
+    Parses an input string, trying to find a group name.
+    
+    :param text: Input string
+    :return: Formatted string (group name) if found, `None` otherwise
+    """
     group = None
     matches = re.findall(r'([а-я]{4})[ -]?(\d{2})[ -]?(\d{2})', text.lower())
     if len(matches):
@@ -153,6 +190,12 @@ def parse_group(text):
 
 
 def parse_auditorium(text):
+    """
+    Parses an input string, trying to find an auditorium name.
+    
+    :param text: Input string
+    :return: Formatted string (auditorium name) if found, `None` otherwise
+    """
     auditorium = None
     matches = re.findall(r'([а-я]+)[ -]?(\d+)(?:[ -]?([\dа-я]))?', text.lower())
     if len(matches):
@@ -161,6 +204,12 @@ def parse_auditorium(text):
 
 
 def parse_lecturer(text):
+    """
+    Parses an input string, trying to find a lecturer name.
+    
+    :param text: Input string
+    :return: Formatted string (lecturer name) if found, `None` otherwise
+    """
     lecturer = None
     matches = re.findall(r'([а-я]{3,}) ?([а-я])?[ .]?([а-я])?[ .]?', text.lower())
     if len(matches):
@@ -170,6 +219,7 @@ def parse_lecturer(text):
 
 
 def get_today():
+    """Returns week parity (1-2) and day number (1-7) for current day."""
     today = date.today()
 
     # Set first day of semester to Sep 1 or Feb 9
@@ -189,6 +239,7 @@ def get_today():
 
 
 def next_day(week, day):
+    """Takes week parity and day number for a day, returns these values for next day"""
     day += 1
     if day > 7:
         day -= 7
@@ -197,5 +248,6 @@ def next_day(week, day):
 
 
 def next_week(week, day):
+    """Takes week parity and day number for a day, returns these values for next week"""
     week = week % 2 + 1
     return week, day

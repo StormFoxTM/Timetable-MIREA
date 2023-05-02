@@ -11,6 +11,7 @@ bot = tb.TeleBot(BOT_TOKEN)
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
+    """Message handler for commands `/start` and `/help`."""
     text = """\
 Привет! Я бот, присылающий расписание МИРЭА.
 
@@ -30,6 +31,7 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['timetable', 'group'])
 def group_handler(message):
+    """Message handler for command `/group`."""
     text = "Напишите группу, расписание которой хотите получить."
     sent_msg = bot.send_message(message.chat.id, text)
     key = 'group'
@@ -38,6 +40,7 @@ def group_handler(message):
 
 @bot.message_handler(commands=['lecturer'])
 def lecturer_handler(message):
+    """Message handler for command `/lecturer`."""
     text = "Напишите преподавателя, чье расписание хотите получить."
     sent_msg = bot.send_message(message.chat.id, text)
     key = 'lecturer'
@@ -46,6 +49,7 @@ def lecturer_handler(message):
 
 @bot.message_handler(commands=['auditorium'])
 def auditorium_handler(message):
+    """Message handler for command `/auditorium`."""
     text = "Напишите аудиторию, расписание по которой хотите получить."
     sent_msg = bot.send_message(message.chat.id, text)
     key = 'auditorium'
@@ -54,6 +58,7 @@ def auditorium_handler(message):
 
 @bot.message_handler(func=lambda msg: True)
 def text_handler(message):
+    """Message handler for all messages not handled by other handlers."""
     params = parse_msg(message.text)
     if params is None:
         text = "Не удалось определить запрос."
@@ -72,6 +77,7 @@ def text_handler(message):
 
 
 def period_handler(message, key):
+    """Message handler for user reply to group/lecturer/auditorium handler message."""
     value = message.text
     text = "Выберите, расписание на какой период вы хотите получить."
     markup = tb.types.ReplyKeyboardMarkup(row_width=2, one_time_keyboard=True)
@@ -83,6 +89,7 @@ def period_handler(message, key):
 
 
 def fetch_timetable(message, key, value):
+    """Message handler for user reply to period handler message. Requests and sends timetable."""
     period = message.text
     value = parse_wrapper(value, mode=key)
     markup = tb.types.ReplyKeyboardRemove()

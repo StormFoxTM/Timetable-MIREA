@@ -41,6 +41,7 @@ def tabulate(table, headers=None, tablefmt="simple"):
     :param table: Tabular data to format (e.g. list of lists)
     :param headers: List of table headers, `None` by default
     :param tablefmt: Table formatting style, `"simple"` by default
+    :return: String containing a formatted table
 
     Example formatting:
     ```repl
