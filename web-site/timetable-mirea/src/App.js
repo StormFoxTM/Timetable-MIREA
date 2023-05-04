@@ -7,14 +7,14 @@ import './App.css';
 
 function App() {
   return (
-    <body>
+    <div>
       <Routes>
       <Route path='/' element={<TimeTable/>}/>
       <Route path='/authorization' element={<Authorization/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/setting' element={<Setting />}/>
       </Routes>
-    </body>
+    </div>
   );
 }
 

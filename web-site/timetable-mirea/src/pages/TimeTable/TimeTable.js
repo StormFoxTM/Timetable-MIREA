@@ -1,6 +1,6 @@
 import './TimeTable.css';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+
 
 let ChoiseElem = (props) =>{
     return(
@@ -10,15 +10,9 @@ let ChoiseElem = (props) =>{
     )
 }
 
-const TimeTable = () => {
-    // let gettable = () => {
-    //     axios.get("localhost:9888?group=ИКБО-02-20&week=1&day=2 ").then(response=>{
-    //         debugger;
-    //         console.log(response)
-    //     })
-    // }
-  return (
-        <div className='timetable_main'>
+let ChoiceMenu = () =>{
+    return (
+        
         <div className='timetable_panel'>
             <div className='timetable_panel_wrapper'>
                 <form>
@@ -38,22 +32,63 @@ const TimeTable = () => {
                 </form> 
             </div>
         </div>
+        )
+}
+
+let Tabletime = () =>{
+    return(
         <div className='timetable_body'>
             <div className='timetable_body_wrapper'>
                 <div>
                     <p className='timetable_body_header'>Расписание группы: </p>
-                    {/* <button onClick={ gettable }></button> */}
-                        {/* <table className='timetable_table'>
-                                <tr className='timetable_column'>
-                                    {getTimetable}
-                                </tr>
-                            
-                        </table> */}
+                        
                 </div>
             </div>
         </div>
-    </div>
-  );
+    )
+}
+
+
+const TimeTable = () => {
+    const rigth = 0;
+    async function gettable(){
+        try {
+            const response = await axios.get('http://mirea-club.site/api/timetable', {
+                params: {
+                    group: 'ИКБО-02-20'
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            return response.data;
+        } catch (error) {
+            return 'error';
+        }
+    };
+    async function settable(){
+        const timetable = await gettable();
+        rigth = 1;
+        console.log(timetable);
+    }
+    if (rigth){
+        return(
+            <div className='timetable_main'>
+                <ChoiceMenu/>
+                <Tabletime/>
+            </div>
+          );
+    }
+    return(
+        <div className='timetable_main'>
+            <ChoiceMenu/>
+            <div className='timetable_body'>
+            <p>Расписание не получено, кликните на кнопку, чтобы получить расписание вашей группы на неделю</p>
+            <button onClick={settable()}>Получить</button>
+        </div>
+        </div>
+      );
+  
 }
 
 export default TimeTable;
