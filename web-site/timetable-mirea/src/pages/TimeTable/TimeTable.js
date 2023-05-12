@@ -1,6 +1,5 @@
 import './TimeTable.css';
-import axios from 'axios';
-
+import {getTimeTable} from './../../redux/ReduserTable'
 
 let ChoiseElem = (props) =>{
     return(
@@ -48,30 +47,11 @@ let Tabletime = () =>{
     )
 }
 
-
-const TimeTable = () => {
-    const rigth = 0;
-    async function gettable(){
-        try {
-            const response = await axios.get('http://mirea-club.site/api/timetable', {
-                params: {
-                    group: 'ИКБО-02-20'
-                },
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            return response.data;
-        } catch (error) {
-            return 'error';
-        }
-    };
-    async function settable(){
-        const timetable = await gettable();
-        rigth = 1;
-        console.log(timetable);
+const TimeTable = (props) => {
+    let settable = () =>{
+        props.dispatch(getTimeTable())
     }
-    if (rigth){
+    if (props.state.getTable){
         return(
             <div className='timetable_main'>
                 <ChoiceMenu/>
@@ -84,7 +64,7 @@ const TimeTable = () => {
             <ChoiceMenu/>
             <div className='timetable_body'>
             <p>Расписание не получено, кликните на кнопку, чтобы получить расписание вашей группы на неделю</p>
-            <button onClick={settable()}>Получить</button>
+            <button onClick={() =>{settable()}}>Получить</button>
         </div>
         </div>
       );

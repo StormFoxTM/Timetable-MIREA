@@ -5,11 +5,11 @@ import Setting from './pages/Setting/Setting';
 import {Routes, Route} from 'react-router-dom'
 import './App.css';
 
-function App() {
+function App(props) {
   return (
     <div>
       <Routes>
-      <Route path='/' element={<TimeTable/>}/>
+      <Route path='/' element={<TimeTable state={props.state.parametrTable} dispatch={props.dispatch}/>}/>
       <Route path='/authorization' element={<Authorization/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/setting' element={<Setting />}/>
