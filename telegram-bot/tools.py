@@ -211,7 +211,7 @@ def parse_lecturer(text):
     :return: Formatted string (lecturer name) if found, `None` otherwise
     """
     lecturer = None
-    matches = re.findall(r'([а-я]{3,}) ?([а-я])?[ .]?([а-я])?[ .]?', text.lower())
+    matches = re.findall(r'([а-я]{3,}) ?([а-я])?[ .]*([а-я])?[ .]*', text.lower())
     if len(matches):
         ln, fn, mn = matches[0]
         lecturer = f"{ln}{' ' + fn + '.' if fn else ''}{mn + '.' if mn else ''}"
