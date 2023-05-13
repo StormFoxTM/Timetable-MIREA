@@ -18,11 +18,10 @@ const Header = () => {
         </div>
         <div className="header_right">
             <div className="dropdown">
-            <Heder_elem k_ref='/setting' name='Настройки' name_class='settings' />
-                {/* <NavLink to='/change_themes' className="background" href="/change_themes">Сменить тему</NavLink> */}
-                </div>
+                <Heder_elem k_ref='/setting' name='Настройки' name_class='settings' />
+            </div>
             <div id="popup" className="dropdown_content">
-            <Heder_elem k_ref='/authorization' name='Войти' name_class='login' />
+                <Heder_elem k_ref='/authorization' name='Войти' name_class='login' />
             </div>
             
         </div>

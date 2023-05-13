@@ -5,3 +5,4 @@
 Ссылка на [GitHub](https://github.com/StormCrownSC/Test)
 
 * main.MD
+* user.MD

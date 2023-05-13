@@ -11,6 +11,16 @@ GRANT ALL PRIVILEGES ON DATABASE TimeTableDB TO api;
 ALTER ROLE client SET client_encoding TO 'utf8';
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO client;
 
+CREATE SEQUENCE clients_client_id_seq START WITH 1;
+
+CREATE TABLE IF NOT EXISTS clients
+(
+    client_id integer NOT NULL DEFAULT nextval('clients_client_id_seq'),
+    client_login character(100) NOT NULL,
+    client_password character(100) NOT NULL,
+    CONSTRAINT lecturer_pkey PRIMARY KEY (client_id)
+);
+
 CREATE SEQUENCE lecturer_id_lecturer_seq START WITH 1;
 
 CREATE TABLE IF NOT EXISTS lecturer

@@ -228,7 +228,7 @@ class Docs():
                     self.read_file(item_path, index)
 
     def read_file(self, item_path, index):
-        # if item_path.endswith('.py') or item_path.endswith('.go'):
+        # if item_path.endswith('.py'): #or item_path.endswith('.go'):
         comments = self.get_comments(item_path)
         if comments:
             self.read_title('Комментарии из файла {}:'.format(item_path), 4, index, 1)
@@ -244,13 +244,16 @@ class Docs():
                 comments = []
                 status = False
                 for line in lines:
-                    line = line.rstrip()
-                    if line.startswith('"""') or line.startswith('///'):
+                    line = line.rstrip().strip()
+                    
+                    if len(line) > 3 and (line.startswith('"""') or line.startswith('///')):
                         status = not status
                     if status is True:
-                        comments.append(line.strip())
-                    if len(line) > 3 and (line.endswith('"""') or line.endswith('///')):
+                        # comments.append(last)
+                        comments.append(line[3:-3].strip())
+                    if line.endswith('"""') or line.endswith('///'):
                         status = False
+                    # last = line
                     
                 return comments
         except:
