@@ -26,6 +26,12 @@ func main() {
 	// Добавляем обработчик GET-запроса по пути "/api/info"
 	router.GET("/api/info", getInfo)
 
+	// Добавляем обработчик GET-запроса по пути "/api/users"
+	router.GET("/api/users", getUsers)
+
+	// Добавляем обработчик POST-запроса по пути "/api/users"
+	router.POST("/api/users", postUsers)
+
 	// Запускаем сервер Gin на порту 9888
 	err := router.Run(":9888")
 	if err != nil {
@@ -33,6 +39,48 @@ func main() {
 		panic("[Error] failed to start Gin server due to: " + err.Error())
 	}
 }
+
+/// getUsers - функция для выдачи информации пользователя ///
+func getUsers(context *gin.Context) {
+	// Получаем параметры запроса
+	data := context.Request.URL.Query()
+
+	// Получаем количество параметров "username"
+	username := data["username"]
+	if len(username) == 1{
+		password, role, err := pgsql.GetUserData(data["username"][0])
+		if err == nil {
+			context.String(http.StatusOK, string(password+" "+role))
+		} else {
+			context.String(http.StatusBadRequest, "User not found")
+		}
+		return
+
+	}
+	context.String(http.StatusBadRequest, "Failure")
+}
+
+/// postUsers - функция для выдачи информации пользователя ///
+func postUsers(context *gin.Context) {
+	// Получаем параметры запроса
+	data := context.Request.URL.Query()
+
+	// Получаем количество параметров "username" и "password"
+	username := data["username"]
+	password := data["password"]
+	if len(username) == 1 && len(password) == 1 {
+		err := pgsql.AddUser(data["username"][0], data["password"][0])
+		if err == nil {
+			context.String(http.StatusOK, "Success")
+		} else {
+			context.String(http.StatusBadRequest, "Failure")
+		}
+		return
+
+	}
+	context.String(http.StatusBadRequest, "Failure")
+}
+
 
 /// getInfo - функция для выдачи информации ///
 func getInfo(context *gin.Context) {

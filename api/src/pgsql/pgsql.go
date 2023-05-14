@@ -6,6 +6,7 @@ import (
 	"errors"
 	"strings"
 	"time"
+	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -124,6 +125,36 @@ func connectToDB() (*pgxpool.Pool, error) {
 		return nil, err
 	}
 	return db, nil
+}
+
+func GetUserData(username string) (string, string, error) {
+	// Открытие соединения с БД
+	var password, role string
+	db, err := connectToDB()
+	if err == nil {
+		defer db.Close()
+		// Выполнение запроса на выборку имени преподавателя из БД
+		err = db.QueryRow(context.Background(), "SELECT client_password, client_role FROM clients WHERE client_login=$1;", 
+		username).Scan(&password, &role)
+		log.Println(username, err, password, role)
+		if err == nil {
+			return strings.TrimSpace(password), strings.TrimSpace(role), nil
+		}
+	}
+	return "", "", err
+}
+
+func AddUser(username string, password string) (error) {
+	// Открытие соединения с БД
+	role := "user"
+	db, err := connectToDB()
+	if err == nil {
+		defer db.Close()
+		// Выполнение запроса на выборку имени преподавателя из БД
+		_, err = db.Exec(context.Background(), "INSERT INTO clients (client_login, client_password, client_role) VALUES ($1, $2, $3);",
+		username, password, role)
+	}
+	return err
 }
 
 /// Функция GetTimetableGroup возвращает расписание занятий для группы по названию group на указанный тип недели и день недели. ///
