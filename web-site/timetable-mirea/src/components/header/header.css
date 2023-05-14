@@ -1,23 +1,23 @@
 .header{
-    position: absolute;
+    display: flex;
     width: 100vw;
-    height: 8vh;
+    height: 50px;
     left: 0px;
     top: 0px;
-    
     background: #42494D;
+    padding-top: 5px;
+    padding-left: 20px;
 }
 
 .header_left{
-    position: absolute;
-    width: 80px;
+    width: 90%;
     height: 30px;
     left: 35px;
     top: 10px;
 }
 
 .main_header{
-    position: absolute;
+    
     width: 66px;
     height: 30px;
     left: 7px;
@@ -40,31 +40,26 @@
 }
 
 .header_right{
-    position: absolute;
-    width: 270px;
+    width: 19%;
     height: 30px;
-    left: 1135px;
-    top: 10px;
+    display: flex;
 }
 
 .dropdown{
-    position: absolute;
-    width: 85px;
+    
     height: 30px;
-    left: 0px;
-    top: 0px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .dropdown_content{
-    position: absolute;
-    width: 150px;
+    position: relative;
     height: 30px;
-    left: 120px;
-    top: 0px;
+    right: 0;
 }
 
 .settings{
-    position: absolute;
+    
     width: 85px;
     height: 30px;
     left: 0px;
@@ -86,10 +81,9 @@
 }
 
 .login{
-    position: absolute;
-    width: 111px;
+    
+    width: 30%;
     height: 30px;
-    left: 20px;
     top: 0px;
     
     text-decoration: none;

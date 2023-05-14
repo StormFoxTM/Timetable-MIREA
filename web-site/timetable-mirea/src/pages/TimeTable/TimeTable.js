@@ -11,12 +11,11 @@ let ChoiseElem = (props) =>{
 
 let ChoiceMenu = () =>{
     return (
-        
         <div className='timetable_panel'>
             <div className='timetable_panel_wrapper'>
                 <form>
                 <p className='timetable_type_info'><b>Введите номер группы, ФИО преподавателя или номер аудитории</b></p>
-                <input type="text" className=''/>
+                <input type="text" className='input_group'/>
                 <button type="submit" className='change_type_info' name="type_of_info" value="day">Получить расписание</button>
                     <p className='timetable_type_info'><b>Быстрая настройка:</b></p>
                     <ChoiseElem id_el='Choice1' name='Сегодня'/>

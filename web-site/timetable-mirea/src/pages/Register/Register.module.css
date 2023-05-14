@@ -2,8 +2,7 @@
     position: relative;
     width: 100vw;
     height: 92vh;
-    top:8vh;
-    background: #393E41;
+    background: var(--background-color-main);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,7 +45,7 @@
     font-weight: 500;
     font-size: 20px;
     line-height: 40px;
-    color: #FFFFFF;
+    color: var(--color-text);
 }
 
 
