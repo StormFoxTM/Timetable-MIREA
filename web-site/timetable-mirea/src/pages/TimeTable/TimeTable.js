@@ -9,14 +9,18 @@ let ChoiseElem = (props) =>{
     )
 }
 
-let ChoiceMenu = () =>{
+let ChoiceMenu = (props) =>{
+    let settable = () =>{
+        props.dispatch(getTimeTable());
+    }
     return (
         <div className='timetable_panel'>
             <div className='timetable_panel_wrapper'>
-                <form>
                 <p className='timetable_type_info'><b>Введите номер группы, ФИО преподавателя или номер аудитории</b></p>
+                <div>
                 <input type="text" className='input_group'/>
-                <button type="submit" className='change_type_info' name="type_of_info" value="day">Получить расписание</button>
+                <button onClick={() => {settable()}}>Получить расписание</button>
+                </div>
                     <p className='timetable_type_info'><b>Быстрая настройка:</b></p>
                     <ChoiseElem id_el='Choice1' name='Сегодня'/>
                     <ChoiseElem id_el='Choice2' name='Завтра'/>
@@ -27,19 +31,21 @@ let ChoiceMenu = () =>{
                     <p className='timetable_type_info'><b>Выберите период</b></p>
                     <input type="date" name="calendar"/>
                 </div>
-                </form> 
             </div>
         </div>
         )
 }
 
-let Tabletime = () =>{
+let Tabletime = (props) =>{
+    let table = () => {
+        console.log(props)
+    }
     return(
         <div className='timetable_body'>
             <div className='timetable_body_wrapper'>
                 <div>
                     <p className='timetable_body_header'>Расписание группы: </p>
-                        
+                        {table}
                 </div>
             </div>
         </div>
@@ -47,23 +53,19 @@ let Tabletime = () =>{
 }
 
 const TimeTable = (props) => {
-    let settable = () =>{
-        props.dispatch(getTimeTable())
-    }
     if (props.state.getTable){
         return(
             <div className='timetable_main'>
-                <ChoiceMenu/>
-                <Tabletime/>
+                <ChoiceMenu dispatch={props.dispatch}/>
+                <Tabletime state={props.state.table}/>
             </div>
           );
     }
     return(
         <div className='timetable_main'>
-            <ChoiceMenu/>
+            <ChoiceMenu dispatch={props.dispatch}/>
             <div className='timetable_body'>
-            <p>Расписание не получено, кликните на кнопку, чтобы получить расписание вашей группы на неделю</p>
-            <button onClick={() =>{settable()}}>Получить</button>
+            <p>Расписание не получено, кликните на кнопку в меню справа, чтобы получить расписание вашей группы на неделю</p>
         </div>
         </div>
       );

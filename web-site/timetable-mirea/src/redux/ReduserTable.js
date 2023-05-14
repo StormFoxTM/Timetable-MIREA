@@ -2,7 +2,8 @@ import axios from 'axios';
 
 let initialState={
     getTable:0,
-    parametr:[]
+    parametr:[],
+    table:[]
 }
 
 
@@ -19,10 +20,13 @@ const ReduserTimeTable = (state = initialState, action) =>{
                 headers: {
                     'Content-Type': 'application/json',
                 }
+            })
+            .then(response =>{
+                state.table=response.data
             });
-        let timeTable = response
-        state.rigth = 1;
-        console.log(timeTable);
+                
+        state.getTable = 1;
+        
         return state;
     }
     else{

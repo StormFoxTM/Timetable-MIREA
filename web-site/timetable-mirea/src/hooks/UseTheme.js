@@ -3,7 +3,7 @@ import { useLayoutEffect, useState } from 'react'
 
 export const useTheme = () => {
     const [theme, setTheme] = useState(
-      localStorage.getItem('app-theme') || 'light'
+      localStorage.getItem('app-theme') || 'dark'
     )
   
     useLayoutEffect(() => {
