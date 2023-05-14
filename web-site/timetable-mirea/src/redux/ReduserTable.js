@@ -21,12 +21,18 @@ const ReduserTimeTable = (state = initialState, action) =>{
                     'Content-Type': 'application/json',
                 }
             })
-            .then(response =>{
-                state.table=response.data
+            .then(response => {
+                const tableData = response.data.data[0]; // Получаем данные таблицы из response.data.data.weeks
+                console.log(tableData); // Выводим данные таблицы в консоль
+                // Далее можно обновить состояние, сохранить данные в store или передать их в компоненты для отображения
+            })
+            .catch(error => {
+            console.error(error);
+            // Обработка ошибки при получении данных
             });
                 
         state.getTable = 1;
-        
+        console.log(state.table)
         return state;
     }
     else{
