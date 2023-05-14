@@ -18,8 +18,13 @@ CREATE TABLE IF NOT EXISTS clients
     client_id integer NOT NULL DEFAULT nextval('clients_client_id_seq'),
     client_login character(100) NOT NULL,
     client_password character(100) NOT NULL,
+    client_role character(100) NOT NULL,
     CONSTRAINT lecturer_pkey PRIMARY KEY (client_id)
 );
+
+INSERT INTO clients (client_login, client_password, client_role) VALUES
+    ('admin1', 'admin1', 'admin'),
+    ('admin2', 'admin2', 'admin');
 
 CREATE SEQUENCE lecturer_id_lecturer_seq START WITH 1;
 
