@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS clients
     client_login character(100) NOT NULL,
     client_password character(100) NOT NULL,
     client_role character(100) NOT NULL,
-    CONSTRAINT lecturer_pkey PRIMARY KEY (client_id)
+    CONSTRAINT clients_pkey PRIMARY KEY (client_id)
 );
 
 INSERT INTO clients (client_login, client_password, client_role) VALUES
