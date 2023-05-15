@@ -8,10 +8,10 @@ const Register = () => {
         <div className={r.login_block}>
         <div className={r.container_register}>
                 <form>
-                    <Elem name='Адрес электронной почты'/>
-                    <Elem name='Логин'/>
-                    <Elem name='Пароль'/>
-                    <Elem name='Подтверждение пароля'/>
+                    <Elem name='Адрес электронной почты' type='email'/>
+                    <Elem name='Логин' type='text'/>
+                    <Elem name='Пароль' type='password'/>
+                    <Elem name='Подтверждение пароля' type='password'/>
                     <div>
                         <button className={r.activ_button}><p className={r.text_form}>Зарегистрироваться</p></button>
                     </div>

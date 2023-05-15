@@ -7,8 +7,8 @@ const Authorization = () => {
     <div className={a.login_block}>
     <div className={a.container_login}>
             <form>
-              <Elem name='Логин'/>
-              <Elem name='Пароль'/>
+              <Elem name='Логин' type='text'/>
+              <Elem name='Пароль' type='password'/>
               <div>
                 <button className={a.activ_button}><p className={a.text_form}>Войти</p></button>
               </div>
