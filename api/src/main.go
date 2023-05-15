@@ -40,7 +40,7 @@ func main() {
 	}
 }
 
-/// getUsers - функция для выдачи информации пользователя ///
+/// getUsers - функция для авторизации пользователя ///
 func getUsers(context *gin.Context) {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
@@ -60,7 +60,7 @@ func getUsers(context *gin.Context) {
 	context.String(http.StatusBadRequest, "Failure")
 }
 
-/// postUsers - функция для выдачи информации пользователя ///
+/// postUsers - функция для регистрации пользователя ///
 func postUsers(context *gin.Context) {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
