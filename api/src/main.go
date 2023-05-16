@@ -47,10 +47,13 @@ func getUsers(context *gin.Context) {
 
 	// Получаем количество параметров "username"
 	username := data["username"]
-	if len(username) == 1{
+	password_enter := data["password"]
+	if len(username) == 1 && len(password) == 1 {
 		password, role, err := pgsql.GetUserData(data["username"][0])
-		if err == nil {
-			context.String(http.StatusOK, string(password+" "+role))
+		if password_enter == password && err == nil {
+			context.String(http.StatusOK, string(role))
+		} else if password_enter != password{
+			context.String(http.StatusBadRequest, "Wrong password")
 		} else {
 			context.String(http.StatusBadRequest, "User not found")
 		}
