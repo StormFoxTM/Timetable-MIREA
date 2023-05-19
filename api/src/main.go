@@ -47,8 +47,8 @@ func getUsers(context *gin.Context) {
 
 	// Получаем количество параметров "username"
 	username := data["username"]
-	password_enter := data["password"]
-	if len(username) == 1 && len(password) == 1 {
+	password_enter := data["password"][0]
+	if len(username) == 1 && len(password_enter) == 1 {
 		password, role, err := pgsql.GetUserData(data["username"][0])
 		if password_enter == password && err == nil {
 			context.String(http.StatusOK, string(role))
