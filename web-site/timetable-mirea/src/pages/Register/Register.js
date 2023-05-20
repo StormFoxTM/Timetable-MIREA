@@ -1,19 +1,37 @@
-import Elem from './Elem';
+import React from 'react';
 import r from './Register.module.css';
 import {NavLink} from "react-router-dom"
+import {registrationCreator} from '../../redux/AutorizationReduser'
 
-
-const Register = () => {
+const Register = (props) => {
+    let adduser = () =>{
+        if (newPassElem.current.value===newPassCheckElem.current.value)
+            props.dispatch(registrationCreator(newLogElem.current.value, newPassElem.current.value));
+            else{
+                console.log("error")
+            }
+    }
+    let newLogElem = React.createRef();
+    let newPassCheckElem = React.createRef();
+    let newPassElem = React.createRef();
     return (
         <div className={r.login_block}>
         <div className={r.container_register}>
                 <form>
-                    <Elem name='Адрес электронной почты' type='email'/>
-                    <Elem name='Логин' type='text'/>
-                    <Elem name='Пароль' type='password'/>
-                    <Elem name='Подтверждение пароля' type='password'/>
+                <div className={r.form_reg}>
+        <p className={r.text_form}>Адрес электронной почты </p><input className={r.form_input} type='email'/>
+        </div>
+        <div className={r.form_reg}>
+        <p className={r.text_form}>Логин </p><input ref={newLogElem} className={r.form_input} type='text'/>
+        </div>
+        <div className={r.form_reg}>
+        <p className={r.text_form}>Пароль </p><input ref={newPassElem} className={r.form_input} type='password'/>
+        </div>
+        <div className={r.form_reg}>
+        <p className={r.text_form}>Подтверждение пароля </p><input ref={newPassCheckElem} className={r.form_input} type='password'/>
+        </div>
                     <div>
-                        <button className={r.activ_button}><p className={r.text_form}>Зарегистрироваться</p></button>
+                        <button onClick={adduser} className={r.activ_button}><p className={r.text_form}>Зарегистрироваться</p></button>
                     </div>
                     <div className={r.container_or}><p className={r.text_form}>или</p></div>
                     <div><NavLink to='/authorization'>

@@ -10,8 +10,8 @@ function App(props) {
     <div>
       <Routes>
       <Route path='/' element={<TimeTable state={props.state.parametrTable} dispatch={props.dispatch}/>}/>
-      <Route path='/authorization' element={<Authorization/>}/>
-      <Route path='/register' element={<Register/>}/>
+      <Route path='/authorization' element={<Authorization state={props.state.userData} dispatch={props.dispatch}/>}/>
+      <Route path='/register' element={<Register state={props.state.userData} dispatch={props.dispatch}/>}/>
       <Route path='/setting' element={<Setting />}/>
       </Routes>
     </div>
