@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"log"
 	"knocker/pgsql" // Импортируем модуль pgsql из нашего собственного пакета knocker
 
 	"github.com/gin-gonic/gin"
