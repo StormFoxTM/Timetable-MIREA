@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-
+	"log"
 	"knocker/pgsql" // Импортируем модуль pgsql из нашего собственного пакета knocker
 
 	"github.com/gin-gonic/gin"
@@ -44,15 +44,14 @@ func main() {
 func getUsers(context *gin.Context) {
 	// Получаем параметры запроса
 	data := context.Request.URL.Query()
-
-	// Получаем количество параметров "username"
+	// Получаем количество параметров "username" и "password"
 	username := data["username"]
-	password_enter := data["password"][0]
+	password_enter := data["password"]
 	if len(username) == 1 && len(password_enter) == 1 {
-		password, role, err := pgsql.GetUserData(data["username"][0])
-		if password_enter == password && err == nil {
+		password, role, err := pgsql.GetUserData(username[0])
+		if password_enter[0] == password && err == nil {
 			context.String(http.StatusOK, string(role))
-		} else if password_enter != password{
+		} else if password_enter[0] != password{
 			context.String(http.StatusBadRequest, "Wrong password")
 		} else {
 			context.String(http.StatusBadRequest, "User not found")
