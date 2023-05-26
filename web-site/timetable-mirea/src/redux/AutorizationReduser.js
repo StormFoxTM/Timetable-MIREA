@@ -2,7 +2,8 @@ import axios from 'axios'
 
 let initialState = {
     login: '',
-    password: ''
+    password: '',
+    role: ''
 }
  
 const UserReduser = (state = initialState, action) =>{

@@ -10,7 +10,18 @@ const Heder_elem = (props) => {
     );
 }
 
-const Header = () => {
+const Header = (props) => {
+    const User =()=>{
+        if (props.appstate.postgre.login === ''){
+        return(
+            <Heder_elem k_ref='/authorization' name='Войти' name_class='login' />
+        );}
+        else {
+            return(
+                <Heder_elem k_ref='/authorization' name={props.state.userdata.login} name_class='login' />
+            );
+        }
+    }
     return(
     <header className="header">
         <div className="header_left">
@@ -21,7 +32,7 @@ const Header = () => {
                 <Heder_elem k_ref='/setting' name='Настройки' name_class='settings' />
             </div>
             <div id="popup" className="dropdown_content">
-                <Heder_elem k_ref='/authorization' name='Войти' name_class='login' />
+                {User}
             </div>
             
         </div>
