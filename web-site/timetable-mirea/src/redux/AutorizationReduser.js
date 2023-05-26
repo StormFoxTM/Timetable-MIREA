@@ -7,11 +7,9 @@ let initialState = {
  
 const UserReduser = (state = initialState, action) =>{
     if (action.type === 'AUTORIZATION-USER'){
-        console.log(action.login_user);
-        console.log(action.password_user);
-        var autorization = axios.get('http://mirea-club.site/api/users', {
+        var autorization = axios.get('http://localhost:9888/api/users', {
                 params: {
-                    login: action.login_user,
+                    username: action.login_user,
                     password: action.password_user
                 },
                 headers: {
@@ -20,14 +18,15 @@ const UserReduser = (state = initialState, action) =>{
             })
             .then(
                 console.log(autorization) 
-            );
+            )
+            .catch(error => {
+                console.error(error);
+                });
         return state;
     } else if (action.type === 'REGISTRATION-USER'){
-        console.log(action.login_user)
-        console.log(action.password_user)
-        var registration = axios.post('http://mirea-club.site/api/users', {
+        var registration = axios.post('http://localhost:9888/api/users', {
                 params: {
-                    login: action.login_user,
+                    username: action.login_user,
                     password:action.password_user
                 },
                 headers: {
@@ -36,7 +35,10 @@ const UserReduser = (state = initialState, action) =>{
             })
             .then(
                 console.log(registration) 
-            );
+            )
+            .catch(error => {
+                console.error(error);
+                });
         return state;
     } 
     else

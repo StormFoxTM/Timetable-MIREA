@@ -17,7 +17,7 @@ const Register = (props) => {
     return (
         <div className={r.login_block}>
         <div className={r.container_register}>
-                <form>
+                
                 <div className={r.form_reg}>
         <p className={r.text_form}>Адрес электронной почты </p><input className={r.form_input} type='email'/>
         </div>
@@ -37,7 +37,7 @@ const Register = (props) => {
                     <div><NavLink to='/authorization'>
                   <button className={r.registration_button}><p className={r.text_form}>Войти</p></button>
                   </NavLink></div>
-                </form>
+                
             </div>
         </div>
     );

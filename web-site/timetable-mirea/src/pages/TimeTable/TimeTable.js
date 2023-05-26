@@ -1,4 +1,5 @@
 import './TimeTable.css';
+import React from 'react';
 import {getTimeTable} from './../../redux/ReduserTable'
 
 let ChoiseElem = (props) =>{
@@ -10,15 +11,16 @@ let ChoiseElem = (props) =>{
 }
 
 let ChoiceMenu = (props) =>{
+    let tableRef = React.createRef();
     let settable = () =>{
-        props.dispatch(getTimeTable());
+        props.dispatch(getTimeTable(tableRef.current.value));
     }
     return (
         <div className='timetable_panel'>
             <div className='timetable_panel_wrapper'>
                 <p className='timetable_type_info'><b>Введите номер группы, ФИО преподавателя или номер аудитории</b></p>
                 <div>
-                <input type="text" className='input_group'/>
+                <input ref={tableRef} type="text" className='input_group'/>
                 <button onClick={() => {settable()}}>Получить расписание</button>
                 </div>
                     <p className='timetable_type_info'><b>Быстрая настройка:</b></p>

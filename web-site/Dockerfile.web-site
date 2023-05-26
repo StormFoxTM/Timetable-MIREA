@@ -8,12 +8,12 @@ WORKDIR /timetable-mirea
 COPY web-site/timetable-mirea/package*.json ./
 
 # Устанавливаем зависимости, копируем все файлы проекта, очищаем кеш npm и собираем проект в одной команде, чтобы уменьшить количество слоев
-RUN npm install --no-optional && \
-    npm ci --only=production && \
-    npm cache clean --force && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/* && \
-    rm -rf ~/.npm
+RUN npm install --no-optional
+RUN npm ci --only=production
+RUN npm cache clean --force
+RUN rm -rf /tmp/* 
+RUN rm -rf /var/cache/apk/*
+RUN rm -rf ~/.npm
 
 # Копируем файлы проекта
 COPY web-site/timetable-mirea/ .
