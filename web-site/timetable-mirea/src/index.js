@@ -12,7 +12,7 @@ let renderAll = (state) =>{
   root.render(
     <React.StrictMode>
       <BrowserRouter>
-      <Header />
+      <Header state={state}/>
       <App state={state} dispatch={store.dispatch.bind(store)}/>
       </BrowserRouter>
     </React.StrictMode>
