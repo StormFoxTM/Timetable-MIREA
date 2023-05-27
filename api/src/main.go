@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"knocker/pgsql" // Импортируем модуль pgsql из нашего собственного пакета knocker
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
@@ -18,6 +19,8 @@ import (
 func main() {
 	// Создаем новый роутер Gin с настройками по умолчанию
 	router := gin.Default()
+
+	router.Use(addHeaders)
 
 	// Добавляем обработчик GET-запроса по пути "/api/timetable"
 	router.GET("/api/timetable", getFunction)
@@ -37,6 +40,21 @@ func main() {
 		// В случае ошибки выводим сообщение об ошибке и завершаем программу
 		panic("[Error] failed to start Gin server due to: " + err.Error())
 	}
+}
+
+// addHeaders - промежуточное ПО для добавления заголовков OPTIONS
+func addHeaders(context *gin.Context) {
+	context.Header("Access-Control-Allow-Origin", "*")
+	context.Header("Access-Control-Allow-Headers", "Content-Type")
+	context.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+
+	// Проверяем, является ли запрос OPTIONS
+	if context.Request.Method == "OPTIONS" {
+		context.AbortWithStatus(204) // Отвечаем 204 No Content для запросов OPTIONS
+		return
+	}
+
+	context.Next()
 }
 
 /// getUsers - функция для авторизации пользователя ///
@@ -69,6 +87,7 @@ func postUsers(context *gin.Context) {
 	// Получаем количество параметров "username" и "password"
 	username := data["username"]
 	password := data["password"]
+	log.Println(username[0], password[0])
 	if len(username) == 1 && len(password) == 1 {
 		err := pgsql.AddUser(data["username"][0], data["password"][0])
 		if err == nil {

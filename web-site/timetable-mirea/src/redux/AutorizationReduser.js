@@ -7,7 +7,8 @@ let initialState = {
  
 const UserReduser = (state = initialState, action) =>{
     if (action.type === 'AUTORIZATION-USER'){
-        var autorization = axios.get('http://localhost:9888/api/users', {
+        state.login=action.login_user
+        axios.get('http://localhost:9888/api/users', {
                 params: {
                     username: action.login_user,
                     password: action.password_user
@@ -16,26 +17,25 @@ const UserReduser = (state = initialState, action) =>{
                     'Content-Type': 'application/json',
                 }
             })
-            .then(
-                console.log(autorization) 
-            )
+            .then( response => {
+                console.log(response.data) 
+            })
             .catch(error => {
                 console.error(error);
                 });
         return state;
     } else if (action.type === 'REGISTRATION-USER'){
-        var registration = axios.post('http://localhost:9888/api/users', {
-                params: {
-                    username: action.login_user,
-                    password:action.password_user
-                },
+        axios.post('http://localhost:9888/api/users', {
+                username: action.login_user,
+                password:action.password_user
+                }, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
             })
-            .then(
-                console.log(registration) 
-            )
+            .then(response => {
+                console.log(response.data) 
+            })
             .catch(error => {
                 console.error(error);
                 });
