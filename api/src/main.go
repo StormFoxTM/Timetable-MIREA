@@ -15,6 +15,11 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+type User struct {
+    Username string `json:"username"`
+    Password string `json:"password"`
+}
+
 /// Основная функция main ///
 func main() {
 	// Создаем новый роутер Gin с настройками по умолчанию
@@ -46,7 +51,7 @@ func main() {
 func addHeaders(context *gin.Context) {
 	context.Header("Access-Control-Allow-Origin", "*")
 	context.Header("Access-Control-Allow-Headers", "Content-Type")
-	context.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	context.Header("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
 
 	// Проверяем, является ли запрос OPTIONS
 	if context.Request.Method == "OPTIONS" {
@@ -65,40 +70,54 @@ func getUsers(context *gin.Context) {
 	username := data["username"]
 	password_enter := data["password"]
 	if len(username) == 1 && len(password_enter) == 1 {
+		log.Println(username[0], password_enter[0])
 		password, role, err := pgsql.GetUserData(username[0])
 		if password_enter[0] == password && err == nil {
 			context.String(http.StatusOK, string(role))
 		} else if password_enter[0] != password{
-			context.String(http.StatusBadRequest, "Wrong password")
+			context.String(http.StatusOK, "Wrong password")
 		} else {
-			context.String(http.StatusBadRequest, "User not found")
+			context.String(http.StatusOK, "User not found")
 		}
 		return
 
 	}
-	context.String(http.StatusBadRequest, "Failure")
+	context.String(http.StatusOK, "Failure")
 }
 
 /// postUsers - функция для регистрации пользователя ///
 func postUsers(context *gin.Context) {
-	// Получаем параметры запроса
-	data := context.Request.URL.Query()
-
+	var user User
+    context.BindJSON(&user)
+	log.Println("Регистрация")
 	// Получаем количество параметров "username" и "password"
-	username := data["username"]
-	password := data["password"]
-	log.Println(username[0], password[0])
-	if len(username) == 1 && len(password) == 1 {
-		err := pgsql.AddUser(data["username"][0], data["password"][0])
+	username := user.Username
+	password := user.Password
+	log.Println(username, password)
+	if username != "" && password != "" {
+		err := pgsql.AddUser(username, password)
 		if err == nil {
 			context.String(http.StatusOK, "Success")
 		} else {
-			context.String(http.StatusBadRequest, "Failure")
+			context.String(http.StatusOK, "Failure")
 		}
 		return
 
 	}
-	context.String(http.StatusBadRequest, "Failure")
+	context.String(http.StatusOK, "Failure")
+}
+
+func CreateUser(c *gin.Context) {
+    var user User
+
+    if err := c.BindJSON(&user); err != nil {
+        c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+        return
+    }
+
+    // Вы можете использовать полученные данные пользователя здесь
+
+    c.JSON(http.StatusOK, gin.H{"message": "Пользователь успешно создан"})
 }
 
 
@@ -119,10 +138,10 @@ func getInfo(context *gin.Context) {
 		if err := check_group(context); err == nil {
 			context.String(http.StatusOK, "Success")
 		} else if err == errors.New("error connect to db") {
-			context.String(http.StatusBadRequest, "DBMS error")
+			context.String(http.StatusOK, "DBMS error")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку"
-			context.String(http.StatusBadRequest, "Failure!")
+			context.String(http.StatusOK, "Failure!")
 		}
 		return
 
@@ -131,10 +150,10 @@ func getInfo(context *gin.Context) {
 		if err := check_lecturer(context); err == nil {
 			context.String(http.StatusOK, "Success")
 		} else if err == errors.New("error connect to db") {
-			context.String(http.StatusBadRequest, "DBMS error")
+			context.String(http.StatusOK, "DBMS error")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку"
-			context.String(http.StatusBadRequest, "Failure")
+			context.String(http.StatusOK, "Failure")
 		}
 		return
 
@@ -143,16 +162,16 @@ func getInfo(context *gin.Context) {
 		if err := check_auditorium(context); err == nil {
 			context.String(http.StatusOK, "Success")
 		} else if err == errors.New("error connect to db") {
-			context.String(http.StatusBadRequest, "DBMS error")
+			context.String(http.StatusOK, "DBMS error")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку"
-			context.String(http.StatusBadRequest, "Failure")
+			context.String(http.StatusOK, "Failure")
 		}
 		return
 
 	// Если количество параметров не соответствует ни одному из вариантов, возвращаем ошибку "Ошибка в запросе!"
 	default:
-		context.String(http.StatusBadRequest, "Request error")
+		context.String(http.StatusOK, "Request error")
 	}
 }
 
@@ -178,10 +197,10 @@ func getFunction(context *gin.Context) {
 			context.String(http.StatusOK, string(dataGroupJSON))
 		} else if err == pgx.ErrNoRows {
 			// Если нет данных, возвращаем ошибку "По запросу ничего не найдено"
-			context.String(http.StatusBadRequest, "Nothing was found on the request")
+			context.String(http.StatusOK, "Nothing was found on the request")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку "Ошибка в запросе!"
-			context.String(http.StatusBadRequest, "Request error")
+			context.String(http.StatusOK, "Request error")
 		}
 
 	case lecturer:
@@ -194,10 +213,10 @@ func getFunction(context *gin.Context) {
 			context.String(http.StatusOK, string(dataJSON))
 		} else if err == pgx.ErrNoRows {
 			// Если нет данных, возвращаем ошибку "По запросу ничего не найдено"
-			context.String(http.StatusBadRequest, "Nothing was found on the request")
+			context.String(http.StatusOK, "Nothing was found on the request")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку "Ошибка в запросе!"
-			context.String(http.StatusBadRequest, "Request error")
+			context.String(http.StatusOK, "Request error")
 		}
 
 	case auditorium:
@@ -210,15 +229,15 @@ func getFunction(context *gin.Context) {
 			context.String(http.StatusOK, string(dataJSON))
 		} else if err == pgx.ErrNoRows {
 			// Если нет данных, возвращаем ошибку "По запросу ничего не найдено"
-			context.String(http.StatusBadRequest, "Nothing was found on the request")
+			context.String(http.StatusOK, "Nothing was found on the request")
 		} else {
 			// Если возникли ошибки, возвращаем ошибку "Ошибка в запросе!"
-			context.String(http.StatusBadRequest, "Request error")
+			context.String(http.StatusOK, "Request error")
 		}
 
 	// Если количество параметров не соответствует ни одному из вариантов, возвращаем ошибку "Ошибка в запросе!"
 	default:
-		context.String(http.StatusBadRequest, "Request error")
+		context.String(http.StatusOK, "Request error")
 	}
 }
 

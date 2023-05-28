@@ -8,38 +8,38 @@ let initialState = {
  
 const UserReduser = (state = initialState, action) =>{
     if (action.type === 'AUTORIZATION-USER'){
-        state.login=action.login_user
-        axios.get('http://localhost:9888/api/users', {
-                params: {
-                    username: action.login_user,
-                    password: action.password_user
-                },
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then( response => {
-                console.log(response.data) 
-            })
-            .catch(error => {
-                console.error(error);
-                });
+        // state.login = action.login_user
+        axios.get('http://localhost:8080/api/users', {
+            params: {
+                username: action.login_user,
+                password: action.password_user
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then( response => {
+            console.log(response.data) 
+        })
+        .catch(error => {
+            console.error(error);
+        });
         return state;
     } else if (action.type === 'REGISTRATION-USER'){
-        axios.post('http://localhost:9888/api/users', {
-                username: action.login_user,
-                password:action.password_user
-                }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => {
-                console.log(response.data) 
-            })
-            .catch(error => {
-                console.error(error);
-                });
+        axios.post('http://localhost:8080/api/users', {
+            username: action.login_user,
+            password: action.password_user
+            }, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            console.log(response.data) 
+        })
+        .catch(error => {
+            console.error(error);
+        });
         return state;
     } 
     else

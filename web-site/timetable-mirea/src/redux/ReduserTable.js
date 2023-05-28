@@ -13,7 +13,7 @@ const ReduserTimeTable = (state = initialState, action) =>{
         return state;
     }
     else if (action.type === 'GET-TABLE'){
-        const response =axios.get('http://mirea-club.site/api/timetable', {
+        const response = axios.get('http://mirea-club.site/api/timetable', {
                 params: {
                     group: action.param
                 },
