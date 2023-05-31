@@ -1,19 +1,22 @@
 import React from 'react';
 import r from './Register.module.css';
-import {NavLink} from "react-router-dom"
+import {NavLink, Navigate} from "react-router-dom";
 import {registrationCreator} from '../../redux/AutorizationReduser'
 
 const Register = (props) => {
     let adduser = () =>{
-        if (newPassElem.current.value===newPassCheckElem.current.value)
-            props.dispatch(registrationCreator(newLogElem.current.value, newPassElem.current.value));
-            else{
-                console.log("error")
-            }
+        if (newPassElem.current.value===newPassCheckElem.current.value){
+            props.dispatch(registrationCreator(newLogElem.current.value, newPassElem.current.value, RefGroup.current.value));
+            <Navigate to="/authorization" />
+        }
+        else{
+            console.log("error")
+        }
     }
     let newLogElem = React.createRef();
     let newPassCheckElem = React.createRef();
     let newPassElem = React.createRef();
+    let RefGroup = React.createRef();
     return (
         <div className={r.login_block}>
         <div className={r.container_register}>
@@ -23,6 +26,9 @@ const Register = (props) => {
         </div>
         <div className={r.form_reg}>
         <p className={r.text_form}>Логин </p><input ref={newLogElem} className={r.form_input} type='text'/>
+        </div>
+        <div className={r.form_reg}>
+        <p className={r.text_form}>Группа </p><input ref={RefGroup} className={r.form_input} type='text'/>
         </div>
         <div className={r.form_reg}>
         <p className={r.text_form}>Пароль </p><input ref={newPassElem} className={r.form_input} type='password'/>

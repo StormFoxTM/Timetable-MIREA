@@ -18,7 +18,7 @@ const Header = (props) => {
         );}
         else {
             return(
-                <Heder_elem k_ref='/authorization' name={props.state.userdata.login} name_class='login' />
+                <Heder_elem k_ref='/mypage' name={props.state.userData.login} name_class='login' />
             );
         }
     }

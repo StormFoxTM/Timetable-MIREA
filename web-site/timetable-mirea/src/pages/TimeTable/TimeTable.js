@@ -2,7 +2,7 @@ import './TimeTable.css';
 import React from 'react';
 import {getTimeTable} from './../../redux/ReduserTable'
 
-let ChoiseElem = (props) =>{
+const ChoiseElem = (props) =>{
     return(
         <div>
             <label><input type="radio" id={props.id_el}/>{props.name}</label>
@@ -10,7 +10,7 @@ let ChoiseElem = (props) =>{
     )
 }
 
-let ChoiceMenu = (props) =>{
+const ChoiceMenu = (props) =>{
     let tableRef = React.createRef();
     let settable = () =>{
         props.dispatch(getTimeTable(tableRef.current.value));
@@ -30,7 +30,7 @@ let ChoiceMenu = (props) =>{
                     <ChoiseElem id_el='Choice4' name='Следующая неделя'/>
                     <ChoiseElem id_el='Choice5' name='Месяц'/>
                 <div>
-                    <p className='timetable_type_info'><b>Выберите период</b></p>
+                    <p className='timetable_type_info'><b>Выберите день</b></p>
                     <input type="date" name="calendar"/>
                 </div>
             </div>
@@ -38,16 +38,54 @@ let ChoiceMenu = (props) =>{
         )
 }
 
-let Tabletime = (props) =>{
+
+const Tabletime = (props) =>{
     let table = () => {
-        console.log(props)
-    }
+        // Дни недели для заголовков
+        const daysOfWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+      
+        return (
+          <div className='timetable'>
+            <table>
+              <thead>
+                <tr>
+                  {/* <th>Номер предмета</th>
+                  <th>Название</th>
+                  <th>Преподаватель</th>
+                  <th>Аудитория</th> */}
+                  <th>&nbsp;</th>
+                  {daysOfWeek.map(day => (
+                    <th>{day}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {props.state.map(e => {
+                  if (e.day !== null) {
+                    return (
+                      <tr>
+                        {e.day.map(day => (
+                          <th>
+                            <p>{day.subject_to_number}</p>
+                            <p>{day.subject_title}</p>
+                            <p>{day.name_lecturer}</p>
+                            <p>{day.auditorium}</p>
+                          </th>
+                        ))}
+                      </tr>
+                    );
+                  }
+                })}
+              </tbody>
+            </table>
+          </div>
+        );
+      };
     return(
         <div className='timetable_body'>
             <div className='timetable_body_wrapper'>
                 <div>
-                    <p className='timetable_body_header'>Расписание группы: </p>
-                        {table}
+                        {table()}
                 </div>
             </div>
         </div>

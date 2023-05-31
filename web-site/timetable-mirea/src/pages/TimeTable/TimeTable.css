@@ -62,3 +62,14 @@ input{
     margin-bottom: 10px;
     /* width: 90%; */
 }
+
+.timetable{
+    box-sizing: border-box;
+    position: relative;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+}

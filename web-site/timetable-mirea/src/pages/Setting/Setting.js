@@ -1,9 +1,9 @@
-import {NavLink} from 'react-router-dom'
+
 import set from './Setting.module.css';
 import { useTheme } from '../../hooks/UseTheme'
 
 function Setting() {
-  const { theme, setTheme } = useTheme()
+  const { setTheme } = useTheme()
     const LightTheme = () => {
         setTheme('light')
     }
@@ -21,8 +21,8 @@ function Setting() {
       </div>
       <div className={set.tem}>
         <p className={set.text}>Настройки темы</p>
-        <button onClick={DarkTheme}>Темная тема</button>
-        <button onClick={LightTheme}>Светлая тема</button>
+        <button onClick={() => {DarkTheme()}}>Темная тема</button>
+        <button onClick={() => {LightTheme()}}>Светлая тема</button>
       </div>
     </div>
   </div>
