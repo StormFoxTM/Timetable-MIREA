@@ -1,13 +1,14 @@
 import React from 'react';
 import set from './../Setting/Setting.module.css';
-import { useHistory } from "react-router-dom";
 import { logoutCreator } from '../../redux/AutorizationReduser'
-import Authorization from './Authorization';
+import { useNavigate } from 'react-router-dom';
 
 function My_page(props) {
     
     let Logout = () =>{
-        props.dispatch(logoutCreator());
+      let navigate = useNavigate();
+      props.dispatch(logoutCreator());
+      navigate('/autorization');
         
     }
     return (

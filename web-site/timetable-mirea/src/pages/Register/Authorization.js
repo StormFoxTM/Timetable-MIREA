@@ -1,12 +1,13 @@
 import a from "./Register.module.css";
 import React from 'react';
-import {NavLink, Navigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {autorizationCreator} from '../../redux/AutorizationReduser'
 
 const Authorization = (props) => {
     let adduser = () =>{
+      let navigate = useNavigate();
       props.dispatch(autorizationCreator(newLogElem.current.value, newPassElem.current.value));
-      <Navigate to="/mypage" />
+      navigate('/mypage')
   }
   let newLogElem = React.createRef();
   let newPassElem = React.createRef();

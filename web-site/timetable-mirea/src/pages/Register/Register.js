@@ -1,13 +1,14 @@
 import React from 'react';
 import r from './Register.module.css';
-import {NavLink, Navigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {registrationCreator} from '../../redux/AutorizationReduser'
 
 const Register = (props) => {
     let adduser = () =>{
         if (newPassElem.current.value===newPassCheckElem.current.value){
+            let navigate = useNavigate();
             props.dispatch(registrationCreator(newLogElem.current.value, newPassElem.current.value, RefGroup.current.value));
-            <Navigate to="/authorization" />
+            navigate('/autorization');
         }
         else{
             console.log("error")
