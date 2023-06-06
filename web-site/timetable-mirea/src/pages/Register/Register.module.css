@@ -11,11 +11,8 @@
 
 .container_register{
     box-sizing: border-box;
-
     width: 30vw;
     height: 85vh;
-    
-
     border: 1px solid #3F88C5;
     border-radius: 10px;
     padding: 25px;
@@ -26,8 +23,6 @@
 
     width: 25vw;
     height: 60vh;
-    
-    
     border: 1px solid #3F88C5;
     border-radius: 10px;
     padding: 25px;
@@ -47,7 +42,6 @@
     background: #F6F7EB;
     border: 1px solid #3F88C5;
     border-radius: 10px;
-
     margin-bottom:10px;
 }
 
@@ -65,7 +59,6 @@
     height: 7vh;
     margin-left:40px;
     margin-top:30px;
-
     background: #42494D;
     border: 1px solid #3F88C5;
     border-radius: 10px;

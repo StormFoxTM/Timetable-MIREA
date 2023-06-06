@@ -1,6 +1,6 @@
 import './TimeTable.css';
 import React from 'react';
-import {getTimeTable, getDateTable} from './../../redux/ReduserTable'
+import {getTimeTable, getDateTable, getResponse} from './../../redux/ReduserTable'
 
 const ChoiceMenu = (props) =>{
     let tableRef = React.createRef();
@@ -10,6 +10,10 @@ const ChoiceMenu = (props) =>{
     let gettable = (t) =>{
       props.dispatch(getDateTable(t.target.value));
   }
+  let gettable_but = () =>{
+    props.dispatch(getResponse());
+}
+
     return (
         <div className='timetable_panel'>
             <div className='timetable_panel_wrapper'>
@@ -32,11 +36,11 @@ const ChoiceMenu = (props) =>{
                     <div>
                       <label><input type="radio" name="choice" value="next_week" onChange={gettable} id='Choice4'/>Следующая неделя</label>
                     </div> 
-                <div>
+                {/* <div>
                     <p className='timetable_type_info'><b>Выберите день</b></p>
                     <input type="date" name="calendar"/>
-                </div>
-                <button onClick={() => {gettable()}}>Получить расписание</button>
+                </div> */}
+                <button onClick={() => {gettable_but()}}>Получить расписание</button>
                 </div>
             </div>
         </div>
@@ -46,9 +50,37 @@ const ChoiceMenu = (props) =>{
 
 const Tabletime = (props) =>{
     let table = () => {
-        // Дни недели для заголовков
+      console.log(props.state.data_type)
+      if (props.state.data_type === 'day'){
+          return(
+            <table className='timetable_table_day'>
+              <tbody>
+                {props.state.table.map(e => {
+                  if (e.day !== null) {
+                    return (
+                      <td valign="top" className='timetable_elem'>
+                        {e.day.map(day => (
+                          <div className='timetable_elem_tr'>
+                            <div className='timetable_elem_tr_in_day'>
+                          {/* <tr className='timetable_elem_tr'> */}
+                          <div className='num'><p>{day.subject_to_number}</p></div>
+                          <p>{day.subject_title}</p>
+                          <div className='ni'><div className='lec'><p>{day.name_lecturer}</p></div>
+                          <p>{day.auditorium}</p></div>
+                          {/* </tr> */}
+                          </div>
+                          </div>
+                        ))}
+                      </td>
+                    );
+                  }
+                })}
+              </tbody>
+            </table>
+        );
+        } else{
+          // Дни недели для заголовков
         const daysOfWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-
         return (
             <table className='timetable_table'>
               <thead>
@@ -59,22 +91,27 @@ const Tabletime = (props) =>{
                   <th>Аудитория</th> */}
                   {/* <th>&nbsp;</th> */}
                   {daysOfWeek.map(day => (
-                    <th>{day}</th>
+                    <th className='th_head'>{day}</th>
                   ))}
+
                 </tr>
               </thead>
               <tbody>
-                {props.state.map(e => {
+                {props.state.table.map(e => {
                   if (e.day !== null) {
                     return (
-                      <td className='timetable_elem'>
+                      <td valign="top" className='timetable_elem'>
                         {e.day.map(day => (
-                          <tr>
-                            <p>{day.subject_to_number}</p>
-                            <p>{day.subject_title}</p>
-                            <p>{day.name_lecturer}</p>
-                            <p>{day.auditorium}</p>
-                          </tr>
+                          <div className='timetable_elem_tr'>
+                            <div className='timetable_elem_tr_in'>
+                          {/* <tr className='timetable_elem_tr'> */}
+                          <div className='num'><p>{day.subject_to_number}</p></div>
+                          <p>{day.subject_title}</p>
+                          <div className='ni'><div className='lec'><p>{day.name_lecturer}</p></div>
+                          <p>{day.auditorium}</p></div>
+                          {/* </tr> */}
+                          </div>
+                          </div>
                         ))}
                       </td>
                     );
@@ -83,6 +120,7 @@ const Tabletime = (props) =>{
               </tbody>
             </table>
         );
+        }
       };
     return(
       <div className='timetable_body'>
@@ -98,7 +136,7 @@ const TimeTable = (props) => {
         return(
             <div className='timetable_main'>
                 <ChoiceMenu dispatch={props.dispatch}/>
-                <Tabletime state={props.state.table}/>
+                <Tabletime state={props.state}/>
             </div>
           );
     }
@@ -106,7 +144,7 @@ const TimeTable = (props) => {
         <div className='timetable_main'>
             <ChoiceMenu dispatch={props.dispatch}/>
             <div className='timetable_body'>
-            <p>Расписание не получено, кликните на кнопку в меню справа, чтобы получить расписание вашей группы на неделю</p>
+            <h1>Расписание не получено, кликните на кнопку в меню справа, чтобы получить расписание вашей группы на неделю</h1>
         </div>
         </div>
       );

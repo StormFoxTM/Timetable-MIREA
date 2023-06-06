@@ -1,7 +1,9 @@
 .timetable_main{
+    padding: 10px;
     position: relative;
     width: 100vw;
-    height: 92vh;
+    min-height: 98vh;
+    height: auto;
     background: var(--background-color-main);
     display: flex;
 }
@@ -11,7 +13,7 @@
     position: relative;
     left: 1%;
     top: 3%;
-    height: 96%;
+    height: 500px;
     width: 20%;
     border: 1px solid #3F88C5;
     border-radius: 10px;
@@ -48,16 +50,15 @@ input{
     top: 3%;
     z-index: 7;
     width: 85vw;
-    height: 90vh;
     
 }
 
 .timetable_body_wrapper {
     z-index: 7;
-    max-width: 85%;
+    max-width: 95%;
     display: flex;
-    align-items: center;
-    justify-content: space-around;
+    align-items:flex-start;
+    justify-content:flex-start;
 }
 .timetable_table{
     border-radius: 10px;
@@ -65,4 +66,56 @@ input{
     position: relative;
     left: 1%;
     
+}
+
+.timetable_table_day{
+    border-radius: 10px;
+    border: 1px solid #3F88C5;
+    position: relative;
+    left: 1%;
+    width: 1000px;
+}
+
+.timetable_elem{
+    min-width: 18%;
+    
+    /* border-bottom: 1px solid #3F88C5; */
+}
+
+.th_head{
+    border-bottom: 1px solid #3F88C5;
+}
+
+.timetable_elem_tr{
+    border-bottom: 1px solid #3F88C5;
+    margin: 3px;
+    padding: 5px;
+    
+}
+.timetable_elem_tr_in{
+    background-color: #393E410D;
+    border-radius: 15px;
+    min-height: 200px;
+}
+
+.timetable_elem_tr_in_day{
+    background-color: #393E410D;
+    border-radius: 15px;
+    min-height: 130px;
+}
+
+.num{
+    display: flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.lec{
+    color: #393E41B2;
+}
+
+.ni{
+    position: relative;
+    top: 10px;
+
 }

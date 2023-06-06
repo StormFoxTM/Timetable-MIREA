@@ -5,6 +5,7 @@ let initialState={
     getTable:0,
     parametr:'',
     data: '',
+    data_type: '',
     table:[]
 }
 
@@ -83,7 +84,6 @@ function ReduserTimeTable (state = initialState, action){
             .then(response => {
                 const tableData = response.data.weeks;
                 state.table = tableData
-                
             })
             .catch(error => {
             console.error(error);
@@ -92,10 +92,80 @@ function ReduserTimeTable (state = initialState, action){
         return state;
     } else if (action.type === 'GET-DATE'){
         const paramDate = determineDate(action.param_ch);
-        const paramTypeDate = determineTypeDate(action.param_ch)
+        const paramTypeDate = determineTypeDate(action.param_ch);
+        state.data = paramDate;
+        state.data_type = paramTypeDate;
         const paramName = determineType(state.parametr);
         const paramValue = state.parametr; 
-        const response = axios.get('http://mirea-club.site/api/timetable', {
+        if (paramTypeDate === 'day'){
+            const response = axios.get('http://mirea-club.site/api/timetable', {
+                params: {
+                    [paramName]: paramValue,
+                    'week': '1',
+                    [paramTypeDate]:paramDate
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                const tableData = response.data.weeks;
+                state.table = tableData
+            })
+            .catch(error => {
+            console.error(error);
+            });
+        }
+        else{
+            const response = axios.get('http://mirea-club.site/api/timetable', {
+                params: {
+                    [paramName]: paramValue,
+                    [paramTypeDate]:paramDate
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                const tableData = response.data.weeks;
+                state.table = tableData
+            })
+            .catch(error => {
+            console.error(error);
+            });
+        }
+        
+                
+        state.getTable = 0;
+        return state;
+    }
+    else if (action.type === 'GET-TIMETABLE'){
+        const paramDate = state.data;
+        const paramTypeDate = state.data_type;
+        const paramName = determineType(state.parametr);
+        const paramValue = state.parametr; 
+        if (paramTypeDate === 'day'){
+            const response = axios.get('http://mirea-club.site/api/timetable', {
+                params: {
+                    [paramName]: paramValue,
+                    'week': '1',
+                    [paramTypeDate]:paramDate
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                const tableData = response.data.weeks;
+                state.table = tableData
+                console.log(tableData)
+            })
+            .catch(error => {
+            console.error(error);
+            });
+        }
+        else{
+            const response = axios.get('http://mirea-club.site/api/timetable', {
                 params: {
                     [paramName]: paramValue,
                     [paramTypeDate]:paramDate
@@ -112,11 +182,10 @@ function ReduserTimeTable (state = initialState, action){
             .catch(error => {
             console.error(error);
             });
-                
+        }
         state.getTable = 1;
         return state;
-    }
-    else{
+    } else{
         return state;
     }
 }
@@ -124,4 +193,5 @@ function ReduserTimeTable (state = initialState, action){
 
 export const getTimeTable = (text) =>({type: 'GET-TABLE', param: text})
 export const getDateTable = (chose) =>({type: 'GET-DATE', param_ch: chose})
+export const getResponse = () =>({type: 'GET-TIMETABLE'})
 export default ReduserTimeTable;
