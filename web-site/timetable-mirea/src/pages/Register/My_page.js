@@ -2,15 +2,15 @@ import React from 'react';
 import set from './../Setting/Setting.module.css';
 import { logoutCreator } from '../../redux/AutorizationReduser'
 import { useNavigate } from 'react-router-dom';
+ 
 
-function My_page(props) {
-    
-    let Logout = () =>{
-      let navigate = useNavigate();
-      props.dispatch(logoutCreator());
-      navigate('/autorization');
-        
-    }
+const My_page = (props) => { 
+  let navigate = useNavigate();
+  let newElem = React.createRef();
+  let Logout = () =>{
+    props.dispatch(logoutCreator());
+    navigate('/authorization');
+  }
     return (
     <div className={set.set_main}>
       <div className={set.container}>

@@ -4,20 +4,22 @@ import {NavLink, useNavigate} from "react-router-dom";
 import {registrationCreator} from '../../redux/AutorizationReduser'
 
 const Register = (props) => {
-    let adduser = () =>{
+    let newLogElem = React.createRef();
+    let newPassCheckElem = React.createRef();
+    let newPassElem = React.createRef();
+    let RefGroup = React.createRef();
+    let navigate = useNavigate();
+
+    let Adduser = () =>{
         if (newPassElem.current.value===newPassCheckElem.current.value){
-            let navigate = useNavigate();
             props.dispatch(registrationCreator(newLogElem.current.value, newPassElem.current.value, RefGroup.current.value));
-            navigate('/autorization');
+            navigate('/authorization');
         }
         else{
             console.log("error")
         }
     }
-    let newLogElem = React.createRef();
-    let newPassCheckElem = React.createRef();
-    let newPassElem = React.createRef();
-    let RefGroup = React.createRef();
+    
     return (
         <div className={r.login_block}>
         <div className={r.container_register}>
@@ -38,7 +40,7 @@ const Register = (props) => {
         <p className={r.text_form}>Подтверждение пароля </p><input ref={newPassCheckElem} className={r.form_input} type='password'/>
         </div>
                     <div>
-                        <button onClick={adduser} className={r.activ_button}><p className={r.text_form}>Зарегистрироваться</p></button>
+                        <button onClick={Adduser} className={r.activ_button}><p className={r.text_form}>Зарегистрироваться</p></button>
                     </div>
                     <div className={r.container_or}><p className={r.text_form}>или</p></div>
                     <div><NavLink to='/authorization'>

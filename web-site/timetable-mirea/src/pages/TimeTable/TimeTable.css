@@ -12,29 +12,10 @@
     left: 1%;
     top: 3%;
     height: 96%;
-    
     width: 20%;
     border: 1px solid #3F88C5;
     border-radius: 10px;
     padding: 25px;
-}
-
-.timetable_body{
-    box-sizing: border-box;
-    position: relative;
-    left: 2%;
-    top: 3%;
-    width: 76%;
-    height: 96%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-
-    border: 1px solid #3F88C5;
-    border-radius: 10px;
-    padding: 25px;
-
 }
 
 p{
@@ -48,7 +29,6 @@ label{
 .change_type_info{
     width: 12vw;
     height: 7vh;
-
     background: #42494D;
     border: 1px solid #3F88C5;
     border-radius: 10px;
@@ -60,16 +40,29 @@ input{
     border-radius: 10px;
     margin-top: 5px;
     margin-bottom: 10px;
-    /* width: 90%; */
 }
 
-.timetable{
-    box-sizing: border-box;
+.timetable_body {
     position: relative;
+    left: 2%;
+    top: 3%;
+    z-index: 7;
+    width: 85vw;
+    height: 90vh;
     
+}
+
+.timetable_body_wrapper {
+    z-index: 7;
+    max-width: 85%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-
+    justify-content: space-around;
+}
+.timetable_table{
+    border-radius: 10px;
+    border: 1px solid #3F88C5;
+    position: relative;
+    left: 1%;
+    
 }
