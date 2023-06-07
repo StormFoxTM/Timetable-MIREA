@@ -10,7 +10,7 @@ let initialState = {
 
 const UserReduser = (state = initialState, action) =>{
     if (action.type === 'AUTORIZATION-USER'){
-        axios.get('http://localhost:8080/api/users', {
+        axios.get('http://mirea-club.site/api/users', {
             params: {
                 username: action.login_user,
                 password: action.password_user
@@ -32,7 +32,7 @@ const UserReduser = (state = initialState, action) =>{
         
         return state;
     } else if (action.type === 'REGISTRATION-USER'){
-        axios.post('http://localhost:8080/api/users', {
+        axios.post('http://mirea-club.site/api/users', {
             username: action.login_user,
             password: action.password_user
             }, {
