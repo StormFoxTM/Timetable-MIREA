@@ -1,103 +1,71 @@
-.header{
-    display: flex;
-    width: 100vw;
-    height: 50px;
-    left: 0px;
-    top: 0px;
-    background: #42494D;
-    padding-top: 5px;
-    padding-left: 20px;
-    overflow: overlay;
+.header {
+  display: flex;
+  width: 100vw;
+  height: 8vh;
+  background: #42494D;
+  overflow: hidden;
+  font-size: 1.8vw;
 }
 
-.header_left{
-    width: 90%;
-    height: 30px;
-    left: 35px;
-    top: 10px;
+/* Добавляем адаптивность для размеров экрана от 768px и выше */
+@media screen and (min-width: 768px) {
+  .header {
+    font-size: 1.5vw;
+  }
 }
 
-.main_header{
-    
-    width: 66px;
-    height: 30px;
-    left: 7px;
-    top: 0px;
-
-    text-decoration: none;
-    font-family: 'Oswald';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 30px;
-
-    /* identical to box height */
-    display: flex;
-    align-items: center;
-    text-align: center;
-    text-transform: capitalize;
-
-    color: #F6F7EB;
+/* Добавляем адаптивность для размеров экрана от 480px до 767px */
+@media screen and (max-width: 767px) {
+  .header {
+    font-size: 3vw;
+  }
 }
 
-.header_right{
-    width: 19%;
-    height: 30px;
-    display: flex;
+/* Добавляем адаптивность для размеров экрана до 479px */
+@media screen and (max-width: 479px) {
+  .header {
+    font-size: 4vw;
+  }
 }
 
-.dropdown{
-    
-    height: 30px;
-    margin-left: 20px;
-    margin-right: 20px;
+.header_left {
+  flex: 1;
+  align-self: center;
+  padding-left: 2vw;
 }
 
-.dropdown_content{
-    position: relative;
-    height: 30px;
-    right: 0;
+.main_header {
+  font-family: 'Oswald';
+  display: flex;
+  align-items: center;
+  text-align: center;
+  text-transform: capitalize;
+  color: #F6F7EB;
 }
 
-.settings{
-    
-    width: 85px;
-    height: 30px;
-    left: 0px;
-    top: 0px;
-    
-    text-decoration: none;
-    font-family: 'Oswald';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 30px;
-    
-    /* identical to box height */
-    display: flex;
-    align-items: center;
-    text-align: center;
-    
-    color: #F6F7EB;
+.header_right {
+  width: 19%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 2vw;
 }
 
-.login{
-    
-    width: 30%;
-    height: 30px;
-    top: 0px;
-    
-    text-decoration: none;
-    font-family: 'Oswald';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 30px;
-    
-    /* identical to box height */
-    display: flex;
-    align-items: center;
-    text-align: center;
-    
-    color: #F6F7EB;
+.dropdown {
+  margin: 0 2vw;
+}
+
+.dropdown_content {
+  position: relative;
+}
+
+.settings,
+.login {
+  font-family: 'Oswald';
+  line-height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #F6F7EB;
 }

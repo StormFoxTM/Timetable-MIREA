@@ -1,4 +1,4 @@
-.login_block{
+.login_block {
     position: relative;
     width: 100vw;
     height: 92vh;
@@ -9,65 +9,143 @@
     text-align: center;
 }
 
-.container_register{
+.container_register {
     box-sizing: border-box;
     width: 30vw;
-    height: 90vh;
+    height: auto;
+    padding-bottom: 1vh;
     border: 1px solid #3F88C5;
     border-radius: 10px;
 }
-.container_login{
-    box-sizing: border-box;
 
-    width: 25vw;
+.container_login {
+    box-sizing: border-box;
+    width: 30vw;
     height: 55vh;
     border: 1px solid #3F88C5;
     border-radius: 10px;
     padding: 30px;
 }
 
-.text_form{
+.text_form {
     font-family: 'Oswald';
     font-style: normal;
     font-weight: 500;
-    font-size: 20px;
-    line-height: 40px;
+    font-size: 2vw;
+    line-height: 2vw;
     color: var(--color-text);
 }
 
-
-.form_input{
+.form_input {
     background: #F6F7EB;
     border: 1px solid #3F88C5;
     border-radius: 10px;
-    margin-bottom:10px;
+    margin-bottom: 1vw;
 }
 
-.activ_button{
-    width: 15vw;
+.activ_button {
+    width: 20vw;
     height: 7vh;
-    margin-left:35px;
-    margin-top:20px;
+    margin-left: 4vw;
+    margin-top: 2vw;
     background: #3F88C5;
     border-radius: 10px;
 }
 
-.registration_button{
-    width: 15vw;
+.registration_button {
+    width: 20vw;
     height: 7vh;
-    margin-left:40px;
-    margin-top:20px;
+    margin-left: 4vw;
+    margin-top: 2vw;
     background: #42494D;
     border: 1px solid #3F88C5;
     border-radius: 10px;
 }
 
-.form_reg{
-    margin-left:20px;
+.form_reg {
+    margin-left: 2vw;
 }
-.container_or{
+
+.container_or {
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+    .container_register {
+        width: 70vw;
+        height: 80vh;
+    }
+
+    .container_login {
+        margin-top: 10vh;
+        width: 60vw;
+        height: 98vh;
+    }
+
+    .text_form {
+        font-size: 2.5vw;
+        line-height: 5vw;
+    }
+
+    .activ_button {
+        width: 45vw;
+        height: 7vh;
+        margin-left: 2.5vw;
+        margin-top: 2vw;
+    }
+
+    .registration_button {
+        width: 45vw;
+        height: 7vh;
+        margin-left: 3.2vw;
+        margin-top: 2vw;
+    }
+
+    .form_reg {
+        margin-left: 1.3vw;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .login_block {
+        height: auto;
+    }
+
+    .container_register {
+        margin-top: 10vh;
+        width: 90vw;
+        height: auto;
+        padding-bottom: 1vh;
+    }
+
+    .container_login {
+        width: 80vw;
+        height: auto;
+    }
+
+    .text_form {
+        font-size: 3.5vw;
+        line-height: 7vw;
+    }
+
+    .activ_button {
+        width: 70vw;
+        height: 5vh;
+        margin-left: 0.6vw;
+        margin-top: 2vw;
+    }
+
+    .registration_button {
+        width: 70vw;
+        height: 5vh;
+        margin-left: 1vw;
+        margin-top: 2vw;
+    }
+
+    .form_reg {
+        margin-left: 0.6vw;
+    }
 }

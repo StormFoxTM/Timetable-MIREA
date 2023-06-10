@@ -1,4 +1,4 @@
-.set_main{
+.set_main {
   position: relative;
   width: 100vw;
   height: 92vh;
@@ -6,66 +6,116 @@
   display: flex;
   justify-content: center;
   text-align: center;
-  padding: 50px;
+  padding: 2.6vw; /* замена 50px на условные единицы */
 }
 
-.container{
+.container {
   width: 70%;
   height: 85%;
   display: flex;
   flex-direction: column;
-  justify-content:left;
-  align-items:baseline;
+  justify-content: left;
+  align-items: baseline;
   text-align: center;
-  border: 1px solid #3F88C5;
-  border-radius: 10px;
-  padding: 25px;
-  
+  border: 0.05vw solid #3F88C5; /* замена 1px на условные единицы */
+  border-radius: 1.04vw; /* замена 10px на условные единицы */
+  padding: 1.3vw; /* замена 25px на условные единицы */
 }
 
-.text{
+.text {
   font-family: 'Oswald';
   font-style: normal;
   font-weight: 500;
-  font-size: 20px;
-  line-height: 40px;
+  font-size: 1.1vw; /* замена 20px на условные единицы */
+  line-height: 2.1vw; /* замена 40px на условные единицы */
   color: var(--color-text);
 }
 
-.table{
+.table {
   width: 100%;
   height: 60%;
   display: flex;
   flex-direction: column;
-  justify-content:left;
-  align-items:baseline;
+  justify-content: left;
+  align-items: baseline;
   text-align: center;
-  border-bottom: 1px solid #3F88C5;
-  padding: 10px;
+  border-bottom: 0.05vw solid #3F88C5; /* замена 1px на условные единицы */
+  padding: 0.5vw; /* замена 10px на условные единицы */
 }
 
-.group{
+.group {
   width: 100%;
   height: 30%;
   display: flex;
   flex-direction: row;
-  justify-content:left;
-  align-items:baseline;
+  justify-content: left;
+  align-items: baseline;
   text-align: center;
 }
 
-button{
+button {
   background-color: #42494D;
-  border: 0.5px solid #3F88C5;
-  border-radius: 10px;
+  border: 0.03vw solid #3F88C5; /* замена 0.5px на условные единицы */
+  border-radius: 1.04vw; /* замена 10px на условные единицы */
 }
 
-.account{
+.account {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content:center;
-  align-items:center;
+  justify-content: center;
+  align-items: center;
   flex-direction: row;
-  padding: 10px;
+  padding: 0.52vw; /* замена 10px на условные единицы */
+}
+
+/* Адаптивность для размеров экрана от 768px и выше */
+@media (min-width: 768px) {
+  .set_main {
+    padding: 1.3vw; /* замена 50px на условные единицы */
+  }
+
+  .container {
+    width: 60%; /* изменение ширины контейнера */
+  }
+
+  .text {
+    font-size: 1.3vw; /* замена 20px на условные единицы */
+    line-height: 2.6vw; /* замена 40px на условные единицы */
+  }
+}
+
+/* Адаптивность для размеров экрана от 480px до 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .set_main {
+    padding: 1.04vw; /* замена 50px на условные единицы */
+  }
+
+  .container {
+    width: 80%; /* изменение ширины контейнера */
+  }
+
+  .text {
+    font-size: 1.04vw; /* замена 20px на условные единицы */
+    line-height: 2.08vw; /* замена 40px на условные единицы */
+  }
+}
+
+/* Адаптивность для размеров экрана до 479px */
+@media (max-width: 479px) {
+  .set_main {
+    padding: 10vw; /* замена 50px на условные единицы */
+    height: 92vh;
+  }
+
+  .container {
+    width: 90%; /* изменение ширины контейнера */
+  } 
+
+  .text {
+    font-size: 4vw; /* замена 20px на условные единицы */
+    line-height: 1.5625vw; /* замена 40px на условные единицы */
+    padding-top: 5vw;
+    padding-bottom: 5vw;
+  }
 }

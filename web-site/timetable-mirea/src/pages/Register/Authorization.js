@@ -28,7 +28,7 @@ const Authorization = (props) => {
               <div>
                 <button onClick={Adduser} className={a.activ_button}><p className={a.text_form}>Войти</p></button>
               </div>
-                <div className={a.container_or}><p className={a.text_form}>или</p></div>
+                <br></br>
                 <div><NavLink to='/register'>
                   <button className={a.registration_button}><p className={a.text_form}>Зарегистрироваться</p></button>
                   </NavLink></div>

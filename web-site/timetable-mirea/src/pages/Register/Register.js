@@ -42,7 +42,7 @@ const Register = (props) => {
                     <div>
                         <button onClick={Adduser} className={r.activ_button}><p className={r.text_form}>Зарегистрироваться</p></button>
                     </div>
-                    <div className={r.container_or}><p className={r.text_form}>или</p></div>
+                    <br></br>
                     <div><NavLink to='/authorization'>
                   <button className={r.registration_button}><p className={r.text_form}>Войти</p></button>
                   </NavLink></div>
