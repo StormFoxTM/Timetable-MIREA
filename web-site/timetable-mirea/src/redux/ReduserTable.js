@@ -83,10 +83,13 @@ function ReduserTimeTable (state = initialState, action){
             })
             .then(response => {
                 const tableData = response.data.weeks;
-                state.table = tableData
+                state.table = tableData;
+                if (state.table === null){
+                    state.getTable = 0;
+                }
             })
             .catch(error => {
-            console.error(error);
+                state.getTable = 0;
             });
             state.getTable = 1;
         return state;
@@ -110,10 +113,13 @@ function ReduserTimeTable (state = initialState, action){
             })
             .then(response => {
                 const tableData = response.data.weeks;
-                state.table = tableData
+                state.table = tableData;
+                if (state.table === null){
+                    state.getTable = 0;
+                }
             })
             .catch(error => {
-            console.error(error);
+                state.getTable = 0;
             });
         }
         else{
@@ -128,14 +134,15 @@ function ReduserTimeTable (state = initialState, action){
             })
             .then(response => {
                 const tableData = response.data.weeks;
-                state.table = tableData
+                state.table = tableData;
+                if (state.table === null){
+                    state.getTable = 0;
+                }
             })
             .catch(error => {
-            console.error(error);
+                state.getTable = 0;
             });
         }
-        
-                
         state.getTable = 0;
         return state;
     }
@@ -157,11 +164,14 @@ function ReduserTimeTable (state = initialState, action){
             })
             .then(response => {
                 const tableData = response.data.weeks;
-                state.table = tableData
-                console.log(tableData)
+                state.table = tableData;
+                console.log(tableData);
+                if (state.table === null){
+                    state.getTable = 0;
+                }
             })
             .catch(error => {
-            console.error(error);
+                state.getTable = 0;
             });
         }
         else{
@@ -176,11 +186,13 @@ function ReduserTimeTable (state = initialState, action){
             })
             .then(response => {
                 const tableData = response.data.weeks;
-                state.table = tableData
-                console.log(tableData)
+                state.table = tableData;
+                if (state.table === null){
+                    state.getTable = 0;
+                }
             })
             .catch(error => {
-            console.error(error);
+                state.getTable = 0;
             });
         }
         state.getTable = 1;

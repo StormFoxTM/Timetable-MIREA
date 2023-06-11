@@ -132,20 +132,21 @@ const Tabletime = (props) =>{
 }
 
 const TimeTable = (props) => {
-    if (props.state.getTable){
-        return(
-            <div className='timetable_main'>
-                <ChoiceMenu dispatch={props.dispatch}/>
-                <Tabletime state={props.state}/>
-            </div>
-          );
-    }
-    return(
+  console.log(props.state.table)
+    if (props.state.table === null || props.state.getTable === 0){
+      return(
         <div className='timetable_main'>
             <ChoiceMenu dispatch={props.dispatch}/>
             <div className='timetable_body'>
             <h1>Расписание не получено, кликните на кнопку в меню справа, чтобы получить расписание вашей группы на неделю</h1>
         </div>
+        </div>
+      );
+    }
+      return(
+        <div className='timetable_main'>
+            <ChoiceMenu dispatch={props.dispatch}/>
+            <Tabletime state={props.state}/>
         </div>
       );
   
