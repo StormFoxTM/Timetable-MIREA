@@ -13,6 +13,8 @@ function determineType(value) {
     if (/^[А-Я]{1,3}-\d{1,3}(-\d{1,2})?$/i.test(value)) {
     // if (/\w\w\w\w-\d\d-\d\d/i.test(value)) {
       return "auditorium";
+    } else if (/^\d{1,3}$/i.test(value)) {
+        return "auditorium";
     } else if (/^[А-Я]{4}-\d{2}-\d{2}$/i.test(value)) {
     // } else if (/\w\w\w\w-\d\d-\d\d/i.test(value)) {
       return "group";
@@ -151,7 +153,7 @@ function ReduserTimeTable (state = initialState, action){
         const paramTypeDate = state.data_type;
         const paramName = determineType(state.parametr);
         const paramValue = state.parametr; 
-        if (paramTypeDate === 'day'){
+        if (paramTypeDate === 'day' && paramDate != 0){
             const response = axios.get('http://mirea-club.site/api/timetable', {
                 params: {
                     [paramName]: paramValue,
@@ -173,6 +175,8 @@ function ReduserTimeTable (state = initialState, action){
             .catch(error => {
                 state.getTable = 0;
             });
+        } else if(paramDate === 0){
+            state.getTable = 0
         }
         else{
             const response = axios.get('http://mirea-club.site/api/timetable', {

@@ -1,22 +1,23 @@
 /* Общие стили */
 
 .timetable_main {
-    position: relative;
+    position: relative; 
     width: 100vw;
     min-height: 98vh;
     height: auto;
     background: var(--background-color-main);
     display: flex;
     font-size: 1vw;
+    padding-top: 10px;
 }
 
 .timetable_panel {
     box-sizing: border-box;
     position: relative;
     left: 1%;
-    top: 3%;
-    height: auto;
-    width: 30vw;
+    top: 2%;
+    height: 80vh;
+    width: 20vw;
     border: 0.02vw solid #3F88C5;
     border-radius: 1vw;
     padding: 2.5vw;
@@ -27,6 +28,8 @@ h1 {
 }
 
 p {
+    
+    font-size: 1.4vw;
     color: var(--color-text);
 }
 
@@ -44,11 +47,16 @@ label {
 }
 
 input {
+    
     max-width: 19vw;
     border: 0.02vw solid #3F88C5;
     border-radius: 1vw;
     margin-top: 0.5vh;
     margin-bottom: 1vh;
+}
+
+.input_group{
+    width: 85%;
 }
 
 .timetable_body {
@@ -80,10 +88,11 @@ input {
     position: relative;
     left: 1%;
     width: 90vw;
+    
 }
 
 .timetable_elem {
-    min-width: 18%;
+    min-width: 20%;
 }
 
 .th_head {
@@ -92,14 +101,15 @@ input {
 
 .timetable_elem_tr {
     border-bottom: 0.02vw solid #3F88C5;
-    margin: 0.75vw;
-    padding: 1.25vw;
+    margin-top: 0.25vw;
+    padding: 0.25vw;
+    
 }
 
 .timetable_elem_tr_in {
     background-color: #393E410D;
     border-radius: 1.5vw;
-    min-height: 20vh;
+    min-height: 40vh;
 }
 
 .timetable_elem_tr_in_day {
@@ -127,11 +137,11 @@ input {
 
 @media (min-width: 768px) {
     .timetable_main {
-        font-size: 1.6vw;
+        font-size: 1.4vw;
     }
   
     .timetable_panel {
-        width: 30vw;
+        width: 20vw;
         padding: 2vw;
     }
   
@@ -144,12 +154,9 @@ input {
     }
   
     .timetable_body {
-        width: 85vw;
+        width: 80vw;
     }
   
-    .timetable_elem {
-        min-width: 15%;
-    }
 }
 
 /* Адаптивность для размеров экрана от 480px до 767px */
@@ -160,7 +167,7 @@ input {
     }
   
     .timetable_panel {
-        width: 30vw;
+        width: 20vw;
         padding: 1.5vw;
     }
   
