@@ -3,9 +3,7 @@
   width: 100vw;
   height: 8vh;
   background: #42494D;
-  overflow: hidden;
   font-size: 1.8vw;
-  
 }
 
 /* Добавляем адаптивность для размеров экрана от 768px и выше */
